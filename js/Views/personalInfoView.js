@@ -1,8 +1,8 @@
 class PersonalInfoView extends View {
-  #parentElement = "";
+  #parentElement = "personal__info";
   #data;
 
-  generateMarkup() {}
+  validateForm() {}
 }
 
 export default new PersonalInfoView();

@@ -582,32 +582,73 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 var _navigationBarView = require("./Views/navigationBarView");
 var _navigationBarViewDefault = parcelHelpers.interopDefault(_navigationBarView);
-const goToNextStep = function() {
-// save data state
-// navigate route
-// render UI
+var _pageView = require("./Views/pageView");
+var _pageViewDefault = parcelHelpers.interopDefault(_pageView);
+var _sideBarView = require("./Views/sideBarView");
+var _sideBarViewDefault = parcelHelpers.interopDefault(_sideBarView);
+const goNext = function() {
+    // validate form
+    // if valid
+    // save data state
+    // get next step data
+    // loading
+    // render new page with data
+    const currentPage = this.model.state.currentPage;
+    this.pageView.render(pageKeys[currentPage.position], currentPage);
+// activateStep side bar
+// navigate
+// else
+// disable next button
+// return
 };
 const goBack = function() {
 // get data
+// activateStep
 // change route
-// render UI
+// render UI with data
 };
 const init = function() {
-    (0, _navigationBarViewDefault.default).addHandlerNavigateNext(goToNextStep);
+    // get state in localStorage if any
+    const currentPage = localStorage.getItem("page") || pageKeys[1];
+    // update state with localStorage if any
+    model.updateState(currentPage, "storedPage");
+    // render side bar
+    (0, _sideBarViewDefault.default).render();
+    (0, _sideBarViewDefault.default).activateStep(currentPage);
+    // render initial page
+    (0, _pageViewDefault.default).render(currentPage.key, currentPage);
+    // render navigationBar
+    // add event listeners to navigationBar
+    (0, _navigationBarViewDefault.default).addHandlerNavigateNext(goNext);
+    (0, _navigationBarViewDefault.default).addHandlerNavigateBack(goBack);
+};
+const pageKeys = {
+    1: "PERSONAL_INFO",
+    2: "SELECT_PLAN"
 };
 init();
 
-},{"./Views/navigationBarView":"9UuZH","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"9UuZH":[function(require,module,exports) {
+},{"./Views/navigationBarView":"9UuZH","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./Views/sideBarView":"4sfzo","./Views/pageView":"5iRew"}],"9UuZH":[function(require,module,exports) {
 // import iconAdvanced from "url:../../assets/images/icon-advanced.svg";
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 class NavigationBarView {
     addHandlerNavigateNext(handler) {
-        window.addEventListener("submit", function(e) {
-            e.preventDefault();
+        window.addEventListener("click", function(e) {
+            // e.preventDefault();
             handler();
         });
     }
+    addHandlerNavigateBack(handler) {
+        window.addEventListener("click", function(e) {
+            // e.preventDefault();
+            handler();
+        });
+    }
+    updateBtnText() {}
+    hideBar() {}
+    hideGoBack() {}
+    disableSubmit() {}
 }
 exports.default = new NavigationBarView();
 
@@ -641,6 +682,44 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}]},["7uCb0","1GgH0"], "1GgH0", "parcelRequire94c2")
+},{}],"4sfzo":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+class SideBarView extends View {
+    generateMarkup() {}
+    activateStep(currentPage) {}
+}
+exports.default = new SideBarView();
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5iRew":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+class PageView extends View {
+    #parentElement = "pageContainer";
+    #data;
+    generateMarkup(pageKey, data) {
+        return this.PAGE_INFO_MAP[pageKey](data);
+    }
+    PAGE_INFO_MAP = {
+        PERSONAL_INFO: (data)=>{
+            return "form";
+        },
+        SELECT_PLAN: (data)=>{
+            return "";
+        },
+        ADD_ONS: (data)=>{
+            return "";
+        },
+        SUMMARY: (data)=>{
+            return "";
+        },
+        THANK_YOU: (data)=>{
+            return "";
+        }
+    };
+}
+exports.default = new PageView();
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["7uCb0","1GgH0"], "1GgH0", "parcelRequire94c2")
 
 //# sourceMappingURL=index.850bd9e5.js.map

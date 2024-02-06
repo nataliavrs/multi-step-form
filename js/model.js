@@ -1,9 +1,17 @@
 class Model {
-  _state = {
+  #state = {
     pages: {
       page1: {},
-      page2: {},
-      page3: {},
+      page2: {
+        api: "",
+      },
+      page3: {
+        api: "",
+      },
+    },
+    currentPage: {
+      key: "",
+      position: 0,
     },
   };
 
@@ -11,9 +19,13 @@ class Model {
 
   getPageData(page) {}
 
+  fetchPageData(page) {}
+
   getData(key) {}
 
-  updateState() {}
+  updateState(data, key) {
+    this.state = { ...this.#state, [key]: data };
+  }
 }
 
 export default new Model();
