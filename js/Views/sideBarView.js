@@ -1,3 +1,5 @@
+import View from "./View";
+
 class SideBarView extends View {
   generateMarkup() {}
 

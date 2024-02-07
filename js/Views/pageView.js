@@ -1,3 +1,5 @@
+import View from "./View";
+
 class PageView extends View {
   #parentElement = "pageContainer";
   #data;

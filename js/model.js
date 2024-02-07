@@ -25,6 +25,24 @@ class Model {
 
   updateState(data, key) {
     this.state = { ...this.#state, [key]: data };
+
+    this.#storeState();
+  }
+
+  updateStateWithStoredData(pages) {
+    this.#state = {
+      ...this.#state,
+      page1: {
+        ...pages[1],
+      },
+      page2: {
+        ...pages[2],
+      },
+    };
+  }
+
+  #storeState() {
+    // local storage.set
   }
 }
 

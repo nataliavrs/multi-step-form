@@ -586,15 +586,19 @@ var _pageView = require("./Views/pageView");
 var _pageViewDefault = parcelHelpers.interopDefault(_pageView);
 var _sideBarView = require("./Views/sideBarView");
 var _sideBarViewDefault = parcelHelpers.interopDefault(_sideBarView);
+var _config = require("./config");
+var _model = require("./model");
+var _modelDefault = parcelHelpers.interopDefault(_model);
 const goNext = function() {
     // validate form
-    // if valid
-    // save data state
-    // get next step data
-    // loading
-    // render new page with data
-    const currentPage = this.model.state.currentPage;
-    this.pageView.render(pageKeys[currentPage.position], currentPage);
+    const currentPosition = "sideBarView";
+    currentPosition.validateForm();
+// if valid
+// save data state & storage
+// get next step data
+// loading spinner
+// render new page with data
+// this.pageView.render(pageKeys[currentPage.position], currentPage);
 // activateStep side bar
 // navigate
 // else
@@ -609,30 +613,37 @@ const goBack = function() {
 };
 const init = function() {
     // get state in localStorage if any
-    const currentPage = localStorage.getItem("page") || pageKeys[1];
+    const storedPages = localStorage.getItem("pages");
     // update state with localStorage if any
-    model.updateState(currentPage, "storedPage");
+    storedPages && (0, _modelDefault.default).updateStateWithStoredData(storedPages);
+    // current page
+    const currentPage = storedPages.pages.currentPage || (0, _config.pageKeys)[1];
+    // render current page
+    (0, _pageViewDefault.default).render(currentPage.key);
     // render side bar
     (0, _sideBarViewDefault.default).render();
     (0, _sideBarViewDefault.default).activateStep(currentPage);
-    // render initial page
-    (0, _pageViewDefault.default).render(currentPage.key, currentPage);
     // render navigationBar
+    (0, _navigationBarViewDefault.default).render();
+    currentPage.key === (0, _config.pageKeys)[1] && (0, _navigationBarViewDefault.default).hideGoBack();
+    currentPage.key === (0, _config.pageKeys)["penumtilma"] && (0, _navigationBarViewDefault.default).updateBtnText("confirm");
+    currentPage.key === (0, _config.pageKeys)["last"] && (0, _navigationBarViewDefault.default).hideBar();
     // add event listeners to navigationBar
     (0, _navigationBarViewDefault.default).addHandlerNavigateNext(goNext);
     (0, _navigationBarViewDefault.default).addHandlerNavigateBack(goBack);
-};
-const pageKeys = {
-    1: "PERSONAL_INFO",
-    2: "SELECT_PLAN"
-};
-init();
+}; // init();
 
-},{"./Views/navigationBarView":"9UuZH","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./Views/sideBarView":"4sfzo","./Views/pageView":"5iRew"}],"9UuZH":[function(require,module,exports) {
+},{"./Views/navigationBarView":"9UuZH","./Views/pageView":"5iRew","./Views/sideBarView":"4sfzo","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./config":"4Wc5b","./model":"Py0LO"}],"9UuZH":[function(require,module,exports) {
 // import iconAdvanced from "url:../../assets/images/icon-advanced.svg";
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-class NavigationBarView {
+var _config = require("../config");
+var _view = require("./View");
+var _viewDefault = parcelHelpers.interopDefault(_view);
+class NavigationBarView extends (0, _viewDefault.default) {
+    generateMarkup(data) {
+        return "currentPage.key === pageKeys[1] ? noback : markup";
+    }
     addHandlerNavigateNext(handler) {
         window.addEventListener("click", function(e) {
             // e.preventDefault();
@@ -652,7 +663,7 @@ class NavigationBarView {
 }
 exports.default = new NavigationBarView();
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gkKU3":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../config":"4Wc5b","./View":"fgUH5"}],"gkKU3":[function(require,module,exports) {
 exports.interopDefault = function(a) {
     return a && a.__esModule ? a : {
         default: a
@@ -682,19 +693,40 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"4sfzo":[function(require,module,exports) {
+},{}],"4Wc5b":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-class SideBarView extends View {
-    generateMarkup() {}
-    activateStep(currentPage) {}
+parcelHelpers.export(exports, "pageKeys", ()=>pageKeys);
+const pageKeys = {
+    1: "PERSONAL_INFO",
+    2: "SELECT_PLAN"
+};
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"fgUH5":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+class View {
+    #data;
+    render(page, data) {
+        this.#data = data;
+        const markup = this.generateMarkup(page, data);
+        this.clear();
+        this.parentElement.insertAdjacentHTML("afterbegin", markup);
+    }
+    update(page) {
+    // update side bar
+    }
+    renderSpinner() {}
+    clear() {}
 }
-exports.default = new SideBarView();
+exports.default = View;
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5iRew":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-class PageView extends View {
+var _view = require("./View");
+var _viewDefault = parcelHelpers.interopDefault(_view);
+class PageView extends (0, _viewDefault.default) {
     #parentElement = "pageContainer";
     #data;
     generateMarkup(pageKey, data) {
@@ -719,6 +751,64 @@ class PageView extends View {
     };
 }
 exports.default = new PageView();
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./View":"fgUH5"}],"4sfzo":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _view = require("./View");
+var _viewDefault = parcelHelpers.interopDefault(_view);
+class SideBarView extends (0, _viewDefault.default) {
+    generateMarkup() {}
+    activateStep(currentPage) {}
+}
+exports.default = new SideBarView();
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./View":"fgUH5"}],"Py0LO":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+class Model {
+    #state = {
+        pages: {
+            page1: {},
+            page2: {
+                api: ""
+            },
+            page3: {
+                api: ""
+            }
+        },
+        currentPage: {
+            key: "",
+            position: 0
+        }
+    };
+    getState() {}
+    getPageData(page) {}
+    fetchPageData(page) {}
+    getData(key) {}
+    updateState(data, key) {
+        this.state = {
+            ...this.#state,
+            [key]: data
+        };
+        this.#storeState();
+    }
+    updateStateWithStoredData(pages) {
+        this.#state = {
+            ...this.#state,
+            page1: {
+                ...pages[1]
+            },
+            page2: {
+                ...pages[2]
+            }
+        };
+    }
+    #storeState() {
+    // local storage.set
+    }
+}
+exports.default = new Model();
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["7uCb0","1GgH0"], "1GgH0", "parcelRequire94c2")
 

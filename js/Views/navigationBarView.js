@@ -1,6 +1,13 @@
 // import iconAdvanced from "url:../../assets/images/icon-advanced.svg";
 
-class NavigationBarView {
+import { pageKeys } from "../config";
+import View from "./View";
+
+class NavigationBarView extends View {
+  generateMarkup(data) {
+    return "currentPage.key === pageKeys[1] ? noback : markup";
+  }
+
   addHandlerNavigateNext(handler) {
     window.addEventListener("click", function (e) {
       // e.preventDefault();
@@ -15,7 +22,11 @@ class NavigationBarView {
     });
   }
 
-  updateBtnText() {}
+  updateBtnText() {
+    if ("confirm") {
+      // get next step update text
+    }
+  }
 
   hideBar() {}
 
