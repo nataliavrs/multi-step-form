@@ -1,13 +1,20 @@
 class Model {
   #state = {
-    pages: {
-      page1: {},
-      page2: {
-        api: "",
+    page: {
+      PERSONAL_INFO: {
+        name: "",
+        email: "",
+        phone: "",
       },
-      page3: {
-        api: "",
+      SELECT_PLAN: {
+        plan: "",
+        recurrence: "",
       },
+      ADD_ONS: {
+        addOn: "",
+      },
+      SUMMARY: {},
+      THANK_YOU: {},
     },
     currentPage: {
       key: "",
@@ -28,6 +35,8 @@ class Model {
 
     this.#storeState();
   }
+
+  updatePage(data, page) {}
 
   updateStateWithStoredData(pages) {
     this.#state = {

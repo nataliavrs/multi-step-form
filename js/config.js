@@ -1,9 +1,9 @@
 export const pageKeys = {
-  1: "PERSONAL_INFO",
-  2: "SELECT_PLAN",
-  3: "PERSONAL_INFO",
-  4: "SELECT_PLAN",
-  5: "ADD_ONS",
-  6: "SUMMARY",
-  7: "THANK_YOU",
+  personalInfo: "PERSONAL_INFO",
+  selectPlan: "SELECT_PLAN",
+  personalInfo: "PERSONAL_INFO",
+  selectPlan: "SELECT_PLAN",
+  addOns: "ADD_ONS",
+  summary: "SUMMARY",
+  thankYou: "THANK_YOU",
 };

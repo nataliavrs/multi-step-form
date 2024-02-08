@@ -1,3 +1,5 @@
+import View from "./View";
+
 class AddOnsView extends View {
   #parentElement = "personal__info";
   #data;

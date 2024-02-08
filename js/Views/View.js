@@ -13,11 +13,12 @@ export default class View {
   }
 
   isFormValid() {
-    return this._parentElement.isFormValid();
+    this.validateForm();
+    return this._parentElement.isFormValid;
   }
 
   getFormData() {
-    return this._parentElement.querySelector("form").data;
+    return this._parentElement._formData;
   }
 
   renderSpinner() {}

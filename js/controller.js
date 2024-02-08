@@ -9,7 +9,6 @@ import thankYouView from "./Views/thankYouView";
 import { pageKeys } from "./config";
 import model from "./model";
 
-// TODO
 const goNext = function () {
   // validate form
   const currentPosition = model.getItem("currentPage").key;
@@ -19,14 +18,17 @@ const goNext = function () {
 
   // if valid
   // save data state & storage
-  model.updateState(currentPosition, "currentPage");
-  model.updateState(currentForm.data, currentPosition);
+  const currentFormData = VIEWS_INSTANCE_MAP[currentPosition].getFormData();
+  model.updatePage(currentFormData, pageKeys[currentPosition]);
   // get next step data
+  const nextStep = currentPosition.router.navigate();
   // loading spinner
+  VIEWS_INSTANCE_MAP[currentPosition].renderSpinner();
   // render new page with data
   // this.pageView.render(pageKeys[currentPage.position], currentPage);
   // activateStep side bar
   // navigate
+  model.updateState(currentPosition, "currentPage");
   // else
   // disable next button
   // return
@@ -46,7 +48,7 @@ const init = function () {
   storedPages && model.updateStateWithStoredData(storedPages);
 
   // current page
-  const currentPage = model.getData("currentPage").key || pageKeys[1];
+  const currentPage = model.getData("currentPage").key || pageKeys.personalInfo;
   // update state with current page
   if (!model.getData("currentPage").key) {
     model.updateState(currentPage, "currentPage");
@@ -61,16 +63,16 @@ const init = function () {
 
   // render navigationBar
   navigationBarView.render();
-  currentPage.key === pageKeys[1] && navigationBarView.hideGoBack();
-  currentPage.key === pageKeys["penumtilma"] &&
+  currentPage.key === pageKeys.personalInfo && navigationBarView.hideGoBack();
+  currentPage.key === pageKeys.summary &&
     navigationBarView.updateBtnText("confirm");
-  currentPage.key === pageKeys["last"] && navigationBarView.hideBar();
+  currentPage.key === pageKeys.thankYou && navigationBarView.hideBar();
   // add event listeners to navigationBar
   navigationBarView.addHandlerNavigateNext(goNext);
   navigationBarView.addHandlerNavigateBack(goBack);
 };
 
-init();
+// init();
 
 const VIEWS_INSTANCE_MAP = {
   PERSONAL_INFO: personalInfoView,
@@ -79,3 +81,5 @@ const VIEWS_INSTANCE_MAP = {
   SUMMARY: summaryView,
   THANK_YOU: thankYouView,
 };
+
+console.log(VIEWS_INSTANCE_MAP["THANK_YOU"].isFormValid());

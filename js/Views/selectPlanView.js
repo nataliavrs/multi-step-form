@@ -1,3 +1,5 @@
+import View from "./View";
+
 class SelectPlanView extends View {
   #parentElement = "select__plan";
   #data;

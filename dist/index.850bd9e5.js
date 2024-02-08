@@ -580,27 +580,44 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 
 },{}],"1GgH0":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+var _addOnsView = require("./Views/addOnsView");
+var _addOnsViewDefault = parcelHelpers.interopDefault(_addOnsView);
 var _navigationBarView = require("./Views/navigationBarView");
 var _navigationBarViewDefault = parcelHelpers.interopDefault(_navigationBarView);
 var _pageView = require("./Views/pageView");
 var _pageViewDefault = parcelHelpers.interopDefault(_pageView);
+var _personalInfoView = require("./Views/personalInfoView");
+var _personalInfoViewDefault = parcelHelpers.interopDefault(_personalInfoView);
+var _selectPlanView = require("./Views/selectPlanView");
+var _selectPlanViewDefault = parcelHelpers.interopDefault(_selectPlanView);
 var _sideBarView = require("./Views/sideBarView");
 var _sideBarViewDefault = parcelHelpers.interopDefault(_sideBarView);
+var _summaryView = require("./Views/summaryView");
+var _summaryViewDefault = parcelHelpers.interopDefault(_summaryView);
+var _thankYouView = require("./Views/thankYouView");
+var _thankYouViewDefault = parcelHelpers.interopDefault(_thankYouView);
 var _config = require("./config");
 var _model = require("./model");
 var _modelDefault = parcelHelpers.interopDefault(_model);
 const goNext = function() {
     // validate form
-    const currentPosition = "sideBarView";
-    currentPosition.validateForm();
-// if valid
-// save data state & storage
-// get next step data
-// loading spinner
-// render new page with data
-// this.pageView.render(pageKeys[currentPage.position], currentPage);
-// activateStep side bar
-// navigate
+    const currentPosition = (0, _modelDefault.default).getItem("currentPage").key;
+    const isFormValid = VIEWS_INSTANCE_MAP[currentPosition].isFormValid();
+    // if invalid
+    if (!isFormValid) return;
+    // if valid
+    // save data state & storage
+    const currentFormData = VIEWS_INSTANCE_MAP[currentPosition].getFormData();
+    (0, _modelDefault.default).updatePage(currentFormData, (0, _config.pageKeys)[currentPosition]);
+    // get next step data
+    const nextStep = currentPosition.router.navigate();
+    // loading spinner
+    VIEWS_INSTANCE_MAP[currentPosition].renderSpinner();
+    // render new page with data
+    // this.pageView.render(pageKeys[currentPage.position], currentPage);
+    // activateStep side bar
+    // navigate
+    (0, _modelDefault.default).updateState(currentPosition, "currentPage");
 // else
 // disable next button
 // return
@@ -617,53 +634,50 @@ const init = function() {
     // update state with localStorage if any
     storedPages && (0, _modelDefault.default).updateStateWithStoredData(storedPages);
     // current page
-    const currentPage = storedPages.pages.currentPage || (0, _config.pageKeys)[1];
+    const currentPage = (0, _modelDefault.default).getData("currentPage").key || (0, _config.pageKeys).personalInfo;
+    // update state with current page
+    if (!(0, _modelDefault.default).getData("currentPage").key) (0, _modelDefault.default).updateState(currentPage, "currentPage");
     // render current page
-    (0, _pageViewDefault.default).render(currentPage.key);
+    (0, _pageViewDefault.default).render(currentPage);
     // render side bar
     (0, _sideBarViewDefault.default).render();
     (0, _sideBarViewDefault.default).activateStep(currentPage);
     // render navigationBar
     (0, _navigationBarViewDefault.default).render();
-    currentPage.key === (0, _config.pageKeys)[1] && (0, _navigationBarViewDefault.default).hideGoBack();
-    currentPage.key === (0, _config.pageKeys)["penumtilma"] && (0, _navigationBarViewDefault.default).updateBtnText("confirm");
-    currentPage.key === (0, _config.pageKeys)["last"] && (0, _navigationBarViewDefault.default).hideBar();
+    currentPage.key === (0, _config.pageKeys).personalInfo && (0, _navigationBarViewDefault.default).hideGoBack();
+    currentPage.key === (0, _config.pageKeys).summary && (0, _navigationBarViewDefault.default).updateBtnText("confirm");
+    currentPage.key === (0, _config.pageKeys).thankYou && (0, _navigationBarViewDefault.default).hideBar();
     // add event listeners to navigationBar
     (0, _navigationBarViewDefault.default).addHandlerNavigateNext(goNext);
     (0, _navigationBarViewDefault.default).addHandlerNavigateBack(goBack);
-}; // init();
+};
+// init();
+const VIEWS_INSTANCE_MAP = {
+    PERSONAL_INFO: (0, _personalInfoViewDefault.default),
+    SELECT_PLAN: (0, _selectPlanViewDefault.default),
+    ADD_ONS: (0, _addOnsViewDefault.default),
+    SUMMARY: (0, _summaryViewDefault.default),
+    THANK_YOU: (0, _thankYouViewDefault.default)
+};
+console.log(VIEWS_INSTANCE_MAP["THANK_YOU"].isFormValid());
 
-},{"./Views/navigationBarView":"9UuZH","./Views/pageView":"5iRew","./Views/sideBarView":"4sfzo","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./config":"4Wc5b","./model":"Py0LO"}],"9UuZH":[function(require,module,exports) {
-// import iconAdvanced from "url:../../assets/images/icon-advanced.svg";
+},{"./Views/addOnsView":"d9TVH","./Views/navigationBarView":"9UuZH","./Views/pageView":"5iRew","./Views/personalInfoView":"d3QS3","./Views/selectPlanView":"9NSui","./Views/sideBarView":"4sfzo","./Views/summaryView":"aOMoz","./Views/thankYouView":"btEkN","./config":"4Wc5b","./model":"Py0LO","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"d9TVH":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-var _config = require("../config");
 var _view = require("./View");
 var _viewDefault = parcelHelpers.interopDefault(_view);
-class NavigationBarView extends (0, _viewDefault.default) {
-    generateMarkup(data) {
-        return "currentPage.key === pageKeys[1] ? noback : markup";
+class AddOnsView extends (0, _viewDefault.default) {
+    #parentElement = "personal__info";
+    #data;
+    validatedForm() {
+        // this.#parentElement get form etc
+        console.log("validate personal info");
+        return "formdata";
     }
-    addHandlerNavigateNext(handler) {
-        window.addEventListener("click", function(e) {
-            // e.preventDefault();
-            handler();
-        });
-    }
-    addHandlerNavigateBack(handler) {
-        window.addEventListener("click", function(e) {
-            // e.preventDefault();
-            handler();
-        });
-    }
-    updateBtnText() {}
-    hideBar() {}
-    hideGoBack() {}
-    disableSubmit() {}
 }
-exports.default = new NavigationBarView();
+exports.default = new AddOnsView();
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../config":"4Wc5b","./View":"fgUH5"}],"gkKU3":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./View":"fgUH5"}],"gkKU3":[function(require,module,exports) {
 exports.interopDefault = function(a) {
     return a && a.__esModule ? a : {
         default: a
@@ -693,16 +707,7 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"4Wc5b":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "pageKeys", ()=>pageKeys);
-const pageKeys = {
-    1: "PERSONAL_INFO",
-    2: "SELECT_PLAN"
-};
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"fgUH5":[function(require,module,exports) {
+},{}],"fgUH5":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 class View {
@@ -711,15 +716,71 @@ class View {
         this.#data = data;
         const markup = this.generateMarkup(page, data);
         this.clear();
-        this.parentElement.insertAdjacentHTML("afterbegin", markup);
+        this._parentElement.insertAdjacentHTML("afterbegin", markup);
     }
     update(page) {
     // update side bar
     }
+    isFormValid() {
+        this.validateForm();
+        return this._parentElement.isFormValid;
+    }
+    getFormData() {
+        return this._parentElement._formData;
+    }
     renderSpinner() {}
-    clear() {}
+    clear() {
+        this._parentElement.innerHTML = "";
+    }
 }
 exports.default = View;
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"9UuZH":[function(require,module,exports) {
+// import iconAdvanced from "url:../../assets/images/icon-advanced.svg";
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _config = require("../config");
+var _view = require("./View");
+var _viewDefault = parcelHelpers.interopDefault(_view);
+class NavigationBarView extends (0, _viewDefault.default) {
+    generateMarkup(_, data) {
+        return "markup";
+    }
+    addHandlerNavigateNext(handler) {
+        window.addEventListener("click", function(e) {
+            // e.preventDefault();
+            handler();
+        });
+    }
+    addHandlerNavigateBack(handler) {
+        window.addEventListener("click", function(e) {
+            // e.preventDefault();
+            handler();
+        });
+    }
+    updateBtnText() {}
+    hideBar() {}
+    showBar() {}
+    hideGoBack() {}
+    showGoBack() {}
+    disableSubmit() {}
+    enableSubmit() {}
+}
+exports.default = new NavigationBarView();
+
+},{"../config":"4Wc5b","./View":"fgUH5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4Wc5b":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "pageKeys", ()=>pageKeys);
+const pageKeys = {
+    personalInfo: "PERSONAL_INFO",
+    selectPlan: "SELECT_PLAN",
+    personalInfo: "PERSONAL_INFO",
+    selectPlan: "SELECT_PLAN",
+    addOns: "ADD_ONS",
+    summary: "SUMMARY",
+    thankYou: "THANK_YOU"
+};
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5iRew":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -727,12 +788,12 @@ parcelHelpers.defineInteropFlag(exports);
 var _view = require("./View");
 var _viewDefault = parcelHelpers.interopDefault(_view);
 class PageView extends (0, _viewDefault.default) {
-    #parentElement = "pageContainer";
+    _parentElement = "pageContainer";
     #data;
     generateMarkup(pageKey, data) {
-        return this.PAGE_INFO_MAP[pageKey](data);
+        return this.PAGE_LAYOUT_MAP[pageKey](data);
     }
-    PAGE_INFO_MAP = {
+    PAGE_LAYOUT_MAP = {
         PERSONAL_INFO: (data)=>{
             return "form";
         },
@@ -752,6 +813,39 @@ class PageView extends (0, _viewDefault.default) {
 }
 exports.default = new PageView();
 
+},{"./View":"fgUH5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"d3QS3":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _view = require("./View");
+var _viewDefault = parcelHelpers.interopDefault(_view);
+class PersonalInfoView extends (0, _viewDefault.default) {
+    #parentElement = "personal__info";
+    #data;
+    validatedForm() {
+        // this.#parentElement get form etc
+        console.log("validate personal info");
+        return "formdata";
+    }
+}
+exports.default = new PersonalInfoView();
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./View":"fgUH5"}],"9NSui":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _view = require("./View");
+var _viewDefault = parcelHelpers.interopDefault(_view);
+class SelectPlanView extends (0, _viewDefault.default) {
+    #parentElement = "select__plan";
+    #data;
+    addHandlerSelectPlan(handler) {
+        handler(selectedPlan);
+    }
+    addHandlerSelectTime(handler) {
+        handler(selectedTime);
+    }
+}
+exports.default = new SelectPlanView();
+
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./View":"fgUH5"}],"4sfzo":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
@@ -763,19 +857,61 @@ class SideBarView extends (0, _viewDefault.default) {
 }
 exports.default = new SideBarView();
 
+},{"./View":"fgUH5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"aOMoz":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _view = require("./View");
+var _viewDefault = parcelHelpers.interopDefault(_view);
+class SummaryView extends (0, _viewDefault.default) {
+    #parentElement = "personal__info";
+    #data;
+    validatedForm() {
+        // this.#parentElement get form etc
+        console.log("validate personal info");
+        return "formdata";
+    }
+}
+exports.default = new SummaryView();
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./View":"fgUH5"}],"btEkN":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _view = require("./View");
+var _viewDefault = parcelHelpers.interopDefault(_view);
+class ThankYouView extends (0, _viewDefault.default) {
+    _parentElement = "personal__info";
+    _formData;
+    _isFormValid;
+    validateForm() {
+        // this.#parentElement get form etc
+        console.log("thank you view");
+        this._isFormValid = "thank you view";
+        this._formData = "";
+    // return "";
+    }
+}
+exports.default = new ThankYouView();
+
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./View":"fgUH5"}],"Py0LO":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 class Model {
     #state = {
-        pages: {
-            page1: {},
-            page2: {
-                api: ""
+        page: {
+            PERSONAL_INFO: {
+                name: "",
+                email: "",
+                phone: ""
             },
-            page3: {
-                api: ""
-            }
+            SELECT_PLAN: {
+                plan: "",
+                recurrence: ""
+            },
+            ADD_ONS: {
+                addOn: ""
+            },
+            SUMMARY: {},
+            THANK_YOU: {}
         },
         currentPage: {
             key: "",
@@ -793,6 +929,7 @@ class Model {
         };
         this.#storeState();
     }
+    updatePage(data, page) {}
     updateStateWithStoredData(pages) {
         this.#state = {
             ...this.#state,

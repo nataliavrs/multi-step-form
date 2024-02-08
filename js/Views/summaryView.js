@@ -1,3 +1,5 @@
+import View from "./View";
+
 class SummaryView extends View {
   #parentElement = "personal__info";
   #data;
