@@ -5,14 +5,24 @@ export default class View {
     this.#data = data;
     const markup = this.generateMarkup(page, data);
     this.clear();
-    this.parentElement.insertAdjacentHTML("afterbegin", markup);
+    this._parentElement.insertAdjacentHTML("afterbegin", markup);
   }
 
   update(page) {
     // update side bar
   }
 
+  isFormValid() {
+    return this._parentElement.isFormValid();
+  }
+
+  getFormData() {
+    return this._parentElement.querySelector("form").data;
+  }
+
   renderSpinner() {}
 
-  clear() {}
+  clear() {
+    this._parentElement.innerHTML = "";
+  }
 }

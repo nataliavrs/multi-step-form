@@ -1,21 +1,26 @@
+import addOnsView from "./Views/addOnsView";
 import navigationBarView from "./Views/navigationBarView";
 import pageView from "./Views/pageView";
+import personalInfoView from "./Views/personalInfoView";
+import selectPlanView from "./Views/selectPlanView";
 import sideBarView from "./Views/sideBarView";
+import summaryView from "./Views/summaryView";
+import thankYouView from "./Views/thankYouView";
 import { pageKeys } from "./config";
 import model from "./model";
 
 // TODO
 const goNext = function () {
   // validate form
-  const currentPosition = "sideBarView" || model.getItem("currentPage").key;
-  const currentForm = currentPosition.validatedForm();
+  const currentPosition = model.getItem("currentPage").key;
+  const isFormValid = VIEWS_INSTANCE_MAP[currentPosition].isFormValid();
   // if invalid
-  if (!currentForm.valid) return;
+  if (!isFormValid) return;
 
   // if valid
   // save data state & storage
-  model.updateState(currentPosition);
-  model.updateState(currentForm.data);
+  model.updateState(currentPosition, "currentPage");
+  model.updateState(currentForm.data, currentPosition);
   // get next step data
   // loading spinner
   // render new page with data
@@ -41,9 +46,14 @@ const init = function () {
   storedPages && model.updateStateWithStoredData(storedPages);
 
   // current page
-  const currentPage = storedPages.pages.currentPage || pageKeys[1];
+  const currentPage = model.getData("currentPage").key || pageKeys[1];
+  // update state with current page
+  if (!model.getData("currentPage").key) {
+    model.updateState(currentPage, "currentPage");
+  }
+
   // render current page
-  pageView.render(currentPage.key);
+  pageView.render(currentPage);
 
   // render side bar
   sideBarView.render();
@@ -60,4 +70,12 @@ const init = function () {
   navigationBarView.addHandlerNavigateBack(goBack);
 };
 
-// init();
+init();
+
+const VIEWS_INSTANCE_MAP = {
+  PERSONAL_INFO: personalInfoView,
+  SELECT_PLAN: selectPlanView,
+  ADD_ONS: addOnsView,
+  SUMMARY: summaryView,
+  THANK_YOU: thankYouView,
+};

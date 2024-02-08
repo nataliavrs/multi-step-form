@@ -4,8 +4,8 @@ import { pageKeys } from "../config";
 import View from "./View";
 
 class NavigationBarView extends View {
-  generateMarkup(data) {
-    return "currentPage.key === pageKeys[1] ? noback : markup";
+  generateMarkup(_, data) {
+    return "markup";
   }
 
   addHandlerNavigateNext(handler) {
@@ -30,9 +30,15 @@ class NavigationBarView extends View {
 
   hideBar() {}
 
+  showBar() {}
+
   hideGoBack() {}
 
+  showGoBack() {}
+
   disableSubmit() {}
+
+  enableSubmit() {}
 }
 
 export default new NavigationBarView();

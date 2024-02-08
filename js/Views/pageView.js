@@ -1,14 +1,14 @@
 import View from "./View";
 
 class PageView extends View {
-  #parentElement = "pageContainer";
+  _parentElement = "pageContainer";
   #data;
 
   generateMarkup(pageKey, data) {
-    return this.PAGE_INFO_MAP[pageKey](data);
+    return this.PAGE_LAYOUT_MAP[pageKey](data);
   }
 
-  PAGE_INFO_MAP = {
+  PAGE_LAYOUT_MAP = {
     PERSONAL_INFO: (data) => {
       return "form";
     },
