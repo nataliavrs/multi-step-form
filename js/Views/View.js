@@ -14,11 +14,11 @@ export default class View {
 
   isFormValid() {
     this.validateForm();
-    return this._parentElement.isFormValid;
+    return this._parentElement.isFormValid();
   }
 
   getFormData() {
-    return this._parentElement._formData;
+    return this._parentElement.formData();
   }
 
   renderSpinner() {}

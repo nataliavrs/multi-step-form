@@ -9,16 +9,16 @@ class NavigationBarView extends View {
   }
 
   addHandlerNavigateNext(handler) {
-    window.addEventListener("click", function (e) {
+    window.addEventListener("click", async function (e) {
       // e.preventDefault();
-      handler();
+      await handler();
     });
   }
 
   addHandlerNavigateBack(handler) {
-    window.addEventListener("click", function (e) {
+    window.addEventListener("click", async function (e) {
       // e.preventDefault();
-      handler();
+      await handler();
     });
   }
 
@@ -35,10 +35,6 @@ class NavigationBarView extends View {
   hideGoBack() {}
 
   showGoBack() {}
-
-  disableSubmit() {}
-
-  enableSubmit() {}
 }
 
 export default new NavigationBarView();

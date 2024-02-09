@@ -1,6 +1,8 @@
+import { pageKeys } from "./config";
+
 class Model {
   #state = {
-    page: {
+    pages: {
       PERSONAL_INFO: {
         name: "",
         email: "",
@@ -22,21 +24,49 @@ class Model {
     },
   };
 
-  getState() {}
+  get state() {
+    return this.#state;
+  }
+
+  #storeState() {
+    // local storage.set
+  }
 
   getPageData(page) {}
 
-  fetchPageData(page) {}
+  async fetchPageData(page) {
+    try {
+      switch (page) {
+        case pageKeys.personalInfo:
+          const url = "baseUrl/personal";
+          fetch("www.test")
+            .then((res) => {
+              if (!res.ok) throw new Error("errore");
+              return res.json();
+            })
+            .then((data) => data);
+          break;
+        default:
+          break;
+      }
+    } catch (error) {}
+  }
 
   getData(key) {}
 
   updateState(data, key) {
-    this.state = { ...this.#state, [key]: data };
+    this.#state = { ...this.#state, [key]: data };
 
     this.#storeState();
   }
 
-  updatePage(data, page) {}
+  updatePosition(position) {
+    this.#state.currentPage.position = position;
+  }
+
+  updatePage(data, page) {
+    this.#state.pages[page] = data;
+  }
 
   updateStateWithStoredData(pages) {
     this.#state = {
@@ -48,10 +78,6 @@ class Model {
         ...pages[2],
       },
     };
-  }
-
-  #storeState() {
-    // local storage.set
   }
 }
 

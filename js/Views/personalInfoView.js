@@ -1,14 +1,24 @@
 import View from "./View";
 
 class PersonalInfoView extends View {
-  #parentElement = "personal__info";
-  #data;
+  _parentElement = "PersonalInfoView";
+  _formData;
+  _isFormValid;
 
-  validatedForm() {
+  get isFormValid() {
+    return this._isFormValid;
+  }
+
+  get formData() {
+    return this._formData;
+  }
+
+  validateForm() {
     // this.#parentElement get form etc
-    console.log("validate personal info");
-
-    return "formdata";
+    console.log("PersonalInfoView");
+    this._isFormValid = "PersonalInfoView";
+    this._formData = "";
+    // return "";
   }
 }
 

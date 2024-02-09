@@ -9,29 +9,42 @@ import thankYouView from "./Views/thankYouView";
 import { pageKeys } from "./config";
 import model from "./model";
 
-const goNext = function () {
-  // validate form
-  const currentPosition = model.getItem("currentPage").key;
-  const isFormValid = VIEWS_INSTANCE_MAP[currentPosition].isFormValid();
-  // if invalid
-  if (!isFormValid) return;
+const goNext = async function () {
+  try {
+    const currentPosition =
+      VIEWS_INSTANCE_MAP[model.getData("currentPage").key];
+    // validate form
+    const isFormValid = currentPosition.isFormValid();
+    // if invalid
+    if (!isFormValid) {
+      // show validation errors
+      return;
+    }
 
-  // if valid
-  // save data state & storage
-  const currentFormData = VIEWS_INSTANCE_MAP[currentPosition].getFormData();
-  model.updatePage(currentFormData, pageKeys[currentPosition]);
-  // get next step data
-  const nextStep = currentPosition.router.navigate();
-  // loading spinner
-  VIEWS_INSTANCE_MAP[currentPosition].renderSpinner();
-  // render new page with data
-  // this.pageView.render(pageKeys[currentPage.position], currentPage);
-  // activateStep side bar
-  // navigate
-  model.updateState(currentPosition, "currentPage");
-  // else
-  // disable next button
-  // return
+    // if valid
+    // save data state
+    const currentFormData = currentPosition.getFormData();
+    model.updatePage(
+      currentFormData,
+      pageKeys[model.getData("currentPage").key]
+    );
+    // loading spinner
+    currentPosition.renderSpinner();
+    // get next step
+    const allPagesKeys = Object.values(pageKeys);
+    const currentIndex = model.getData("currentPage").position;
+    const nextPageKey = allPagesKeys[currentIndex + 1];
+    // fetch next page data
+    const nextPageData = await model.fetchPageData(nextPageKey);
+    // render new page with data
+    pageView.render(nextPageKey, nextPageData);
+    // activateStep side bar
+    sideBarView.activateStep(currentPage);
+    // update current position state
+    model.updatePosition(currentIndex);
+  } catch (error) {
+    console.error("Error navigating to next step", error);
+  }
 };
 
 const goBack = function () {
@@ -48,31 +61,33 @@ const init = function () {
   storedPages && model.updateStateWithStoredData(storedPages);
 
   // current page
-  const currentPage = model.getData("currentPage").key || pageKeys.personalInfo;
+  const currentPageKey =
+    model.getData("currentPage").key || pageKeys.personalInfo;
   // update state with current page
   if (!model.getData("currentPage").key) {
-    model.updateState(currentPage, "currentPage");
+    model.updateState(currentPageKey, "currentPage");
   }
 
   // render current page
-  pageView.render(currentPage);
+  pageView.render(currentPageKey);
 
   // render side bar
   sideBarView.render();
-  sideBarView.activateStep(currentPage);
+  sideBarView.activateStep(currentPageKey);
 
   // render navigationBar
   navigationBarView.render();
-  currentPage.key === pageKeys.personalInfo && navigationBarView.hideGoBack();
-  currentPage.key === pageKeys.summary &&
+  currentPageKey.key === pageKeys.personalInfo &&
+    navigationBarView.hideGoBack();
+  currentPageKey.key === pageKeys.summary &&
     navigationBarView.updateBtnText("confirm");
-  currentPage.key === pageKeys.thankYou && navigationBarView.hideBar();
+  currentPageKey.key === pageKeys.thankYou && navigationBarView.hideBar();
   // add event listeners to navigationBar
   navigationBarView.addHandlerNavigateNext(goNext);
   navigationBarView.addHandlerNavigateBack(goBack);
 };
 
-// init();
+init();
 
 const VIEWS_INSTANCE_MAP = {
   PERSONAL_INFO: personalInfoView,
@@ -81,5 +96,3 @@ const VIEWS_INSTANCE_MAP = {
   SUMMARY: summaryView,
   THANK_YOU: thankYouView,
 };
-
-console.log(VIEWS_INSTANCE_MAP["THANK_YOU"].isFormValid());
