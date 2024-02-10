@@ -41,17 +41,34 @@ const goNext = async function () {
     // activateStep side bar
     sideBarView.activateStep(currentPage);
     // update current position state
-    model.updatePosition(currentIndex);
+    model.updateCurrentPosition(currentPageKey, currentIndex);
   } catch (error) {
     console.error("Error navigating to next step", error);
   }
 };
 
-const goBack = function () {
-  // get data
-  // activateStep
-  // change route
+const goBack = async function () {
+  // find current page
+  const currentPagePosition = model.getData("currentPage").position;
+  // get previous page
+  const allPagesKeys = Object.values(pageKeys);
+  const previousPageKey = allPagesKeys[currentPagePosition - 1];
+  // loading spinner
+  VIEWS_INSTANCE_MAP[previousPageKey].renderSpinner();
+  // fetch next page data
+  const previousPageData = await model.fetchPageData(previousPageKey);
+  // get data of previous page
+  const previousPageFormData = model.getPageData(previousPageKey);
   // render UI with data
+  pageView.render(previousPageKey, {
+    ...previousPageData,
+    ...previousPageFormData,
+  });
+  // activateStep side bar
+  sideBarView.activateStep(previousPageKey);
+  // update current position state
+  const previousIndex = model.getData("currentPage").position - 1;
+  model.updateCurrentPosition(previousPageKey, previousIndex);
 };
 
 const init = function () {

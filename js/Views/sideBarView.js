@@ -3,7 +3,7 @@ import View from "./View";
 class SideBarView extends View {
   generateMarkup() {}
 
-  activateStep(currentPage) {
+  activateStep(currentPageKey) {
     this.update();
   }
 }

@@ -32,7 +32,9 @@ class Model {
     // local storage.set
   }
 
-  getPageData(page) {}
+  getPageData(page) {
+    return this.#state.pages[page];
+  }
 
   async fetchPageData(page) {
     try {
@@ -47,6 +49,7 @@ class Model {
             .then((data) => data);
           break;
         default:
+          Promise.resolve();
           break;
       }
     } catch (error) {}
@@ -60,8 +63,9 @@ class Model {
     this.#storeState();
   }
 
-  updatePosition(position) {
+  updateCurrentPosition(key, position) {
     this.#state.currentPage.position = position;
+    this.#state.currentPage.key = key;
   }
 
   updatePage(data, page) {
