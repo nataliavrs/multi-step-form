@@ -36,6 +36,8 @@ const goNext = async function () {
     const nextPageKey = allPagesKeys[currentIndex + 1];
     // fetch next page data
     const nextPageData = await model.fetchPageData(nextPageKey);
+    // render navigation bar
+    // TODO
     // render new page with data
     pageView.render(nextPageKey, nextPageData);
     // activateStep side bar
@@ -64,12 +66,18 @@ const goBack = async function () {
     ...previousPageData,
     ...previousPageFormData,
   });
+  // render navigation bar
+  // TODO
   // activateStep side bar
   sideBarView.activateStep(previousPageKey);
   // update current position state
   const previousIndex = model.getData("currentPage").position - 1;
   model.updateCurrentPosition(previousPageKey, previousIndex);
 };
+
+// TODO jumpToPreviousPage
+
+// TODO renderNavigationBar
 
 const init = function () {
   // get state in localStorage if any
