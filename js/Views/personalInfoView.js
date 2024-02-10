@@ -20,6 +20,12 @@ class PersonalInfoView extends View {
     this._formData = "";
     // return "";
   }
+
+  validateOnValueChange(input) {
+    input.addEventListener("input", (e) => {
+      console.log(e.target.value);
+    });
+  }
 }
 
 export default new PersonalInfoView();
