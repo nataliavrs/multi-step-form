@@ -636,7 +636,6 @@ const goNext = async function() {
     }
 };
 const manageNavigationBar = function(pageKey) {
-    console.log((0, _config.pageKeys).personalInfo, pageKey, pageKey.key !== (0, _config.pageKeys).personalInfo);
     pageKey !== (0, _config.pageKeys).personalInfo && (0, _navigationBarViewDefault.default).showGoBack();
     pageKey === (0, _config.pageKeys).personalInfo && (0, _navigationBarViewDefault.default).hideGoBack();
     pageKey === (0, _config.pageKeys).summary && (0, _navigationBarViewDefault.default).showConfirmBtn();
@@ -645,7 +644,7 @@ const manageNavigationBar = function(pageKey) {
 };
 const goBack = async function() {
     // find current page
-    const currentPagePosition = (0, _modelDefault.default).getData("currentPage").position;
+    const currentPagePosition = (0, _modelDefault.default).getData("currentPage")?.position;
     // get previous page
     const allPagesKeys = Object.values((0, _config.pageKeys));
     const previousPageKey = allPagesKeys[currentPagePosition - 1];
@@ -701,12 +700,11 @@ const init = function() {
     // render navigationBar
     (0, _navigationBarViewDefault.default).render();
     // manage navigationBar
-    manageNavigationBar(currentPageKey1);
-// add event listeners to navigationBar
-// navigationBarView.addHandlerNavigateNext(goNext);
-// navigationBarView.addHandlerNavigateBack(goBack);
+    // manageNavigationBar(currentPageKey);
+    // add event listeners
+    // VIEWS_INSTANCE_MAP[currentPageKey].addHandlerNavigateNext(goNext);
+    (0, _navigationBarViewDefault.default).addHandlerNavigateBack(goBack);
 };
-init();
 const VIEWS_INSTANCE_MAP = {
     PERSONAL_INFO: (0, _personalInfoViewDefault.default),
     SELECT_PLAN: (0, _selectPlanViewDefault.default),
@@ -714,6 +712,7 @@ const VIEWS_INSTANCE_MAP = {
     SUMMARY: (0, _summaryViewDefault.default),
     THANK_YOU: (0, _thankYouViewDefault.default)
 };
+init();
 
 },{"./Views/addOnsView":"d9TVH","./Views/navigationBarView":"9UuZH","./Views/pageView":"5iRew","./Views/personalInfoView":"d3QS3","./Views/selectPlanView":"9NSui","./Views/sideBarView":"4sfzo","./Views/summaryView":"aOMoz","./Views/thankYouView":"btEkN","./config":"4Wc5b","./model":"Py0LO","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"d9TVH":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -741,6 +740,13 @@ class View {
         const markup = this.generateMarkup(page, data);
         this.clear();
         this._parentElement.insertAdjacentHTML("afterbegin", markup);
+    }
+    addHandlerNavigateNext(handler) {
+        const form = document.querySelector("form");
+        form.addEventListener("submit", async function(e) {
+            e.preventDefault();
+            await handler();
+        });
     }
     update(page) {
     // update side bar
@@ -802,16 +808,8 @@ class NavigationBarView extends (0, _viewDefault.default) {
       <button type="submit" class="btn--next">Next step</button>
     `;
     }
-    addHandlerNavigateNext(handler) {
-        const form = document.querySelector("form");
-        form.addEventListener("submit", async function(e) {
-            e.preventDefault();
-            await handler();
-        });
-    }
     addHandlerNavigateBack(handler) {
         this._parentElement.querySelector(".btn--back").addEventListener("click", async function(e) {
-            e.preventDefault();
             await handler();
         });
     }

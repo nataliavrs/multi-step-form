@@ -8,6 +8,14 @@ export default class View {
     this._parentElement.insertAdjacentHTML("afterbegin", markup);
   }
 
+  addHandlerNavigateNext(handler) {
+    const form = document.querySelector("form");
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      await handler();
+    });
+  }
+
   update(page) {
     // update side bar
   }

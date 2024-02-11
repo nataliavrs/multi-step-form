@@ -66,7 +66,7 @@ const manageNavigationBar = function (pageKey) {
 
 const goBack = async function () {
   // find current page
-  const currentPagePosition = model.getData("currentPage").position;
+  const currentPagePosition = model.getData("currentPage")?.position;
   // get previous page
   const allPagesKeys = Object.values(pageKeys);
   const previousPageKey = allPagesKeys[currentPagePosition - 1];
@@ -131,14 +131,12 @@ const init = function () {
   // render navigationBar
   navigationBarView.render();
   // manage navigationBar
-  manageNavigationBar(currentPageKey);
+  // manageNavigationBar(currentPageKey);
 
-  // add event listeners to navigationBar
-  // navigationBarView.addHandlerNavigateNext(goNext);
-  // navigationBarView.addHandlerNavigateBack(goBack);
+  // add event listeners
+  // VIEWS_INSTANCE_MAP[currentPageKey].addHandlerNavigateNext(goNext);
+  navigationBarView.addHandlerNavigateBack(goBack);
 };
-
-init();
 
 const VIEWS_INSTANCE_MAP = {
   PERSONAL_INFO: personalInfoView,
@@ -147,3 +145,5 @@ const VIEWS_INSTANCE_MAP = {
   SUMMARY: summaryView,
   THANK_YOU: thankYouView,
 };
+
+init();

@@ -10,19 +10,10 @@ class NavigationBarView extends View {
     `;
   }
 
-  addHandlerNavigateNext(handler) {
-    const form = document.querySelector("form");
-    form.addEventListener("submit", async function (e) {
-      e.preventDefault();
-      await handler();
-    });
-  }
-
   addHandlerNavigateBack(handler) {
     this._parentElement
       .querySelector(".btn--back")
       .addEventListener("click", async function (e) {
-        e.preventDefault();
         await handler();
       });
   }
