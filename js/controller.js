@@ -38,11 +38,15 @@ const goNext = async function () {
     const nextPageData = await model.fetchPageData(nextPageKey);
     // render new page with data
     pageView.render(nextPageKey, nextPageData);
+
     if (nextPageKey === pageKeys.summary) {
       addOnsView.addHandlerJumpToPage(jumpToPreviousPage);
     }
     // manage navigationBar
     manageNavigationBar(nextPageKey);
+    // add event listeners to navigationBar
+    navigationBarView.addHandlerNavigateNext(goNext);
+    navigationBarView.addHandlerNavigateBack(goBack);
     // activateStep side bar
     sideBarView.activateStep(currentPage);
     // update current position state
@@ -55,9 +59,8 @@ const goNext = async function () {
 const manageNavigationBar = function (pageKey) {
   pageKey.key !== pageKeys.personalInfo && navigationBarView.showGoBack();
   pageKey.key === pageKeys.personalInfo && navigationBarView.hideGoBack();
-  pageKey.key === pageKeys.summary &&
-    navigationBarView.updateBtnText("confirm");
-  pageKey.key !== pageKeys.summary && navigationBarView.updateBtnText("next");
+  pageKey.key === pageKeys.summary && navigationBarView.showConfirmBtn();
+  pageKey.key !== pageKeys.summary && navigationBarView.showNextStepBtn();
   pageKey.key === pageKeys.thankYou && navigationBarView.hideBar();
 };
 
@@ -118,7 +121,8 @@ const init = function () {
   }
 
   // render current page
-  pageView.render(currentPageKey);
+  const pageData = model.getPageData(currentPageKey);
+  pageView.render(currentPageKey, pageData);
 
   // render side bar
   sideBarView.render();

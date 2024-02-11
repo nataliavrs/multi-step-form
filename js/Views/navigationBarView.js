@@ -1,40 +1,55 @@
-// import iconAdvanced from "url:../../assets/images/icon-advanced.svg";
-
-import { pageKeys } from "../config";
 import View from "./View";
 
 class NavigationBarView extends View {
-  generateMarkup(_, data) {
-    return "markup";
+  _parentElement = document.querySelector(".navigation__bar");
+
+  generateMarkup(_, _) {
+    return `
+      <button type="submit" class="btn--back">Next step</button>
+      <button class="btn--next">Back</button>
+    `;
   }
 
   addHandlerNavigateNext(handler) {
-    window.addEventListener("click", async function (e) {
-      // e.preventDefault();
+    const form = document.querySelector("form");
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
       await handler();
     });
   }
 
   addHandlerNavigateBack(handler) {
-    window.addEventListener("click", async function (e) {
-      // e.preventDefault();
-      await handler();
-    });
+    this._parentElement
+      .querySelector(".btn--back")
+      .addEventListener("click", async function (e) {
+        e.preventDefault();
+        await handler();
+      });
   }
 
-  updateBtnText() {
-    if ("confirm") {
-      // get next step update text
-    }
+  hideBar() {
+    this._parentElement.classList.add("hide");
   }
 
-  hideBar() {}
+  showBar() {
+    this._parentElement.classList.remove("hide");
+  }
 
-  showBar() {}
+  showConfirmBtn() {
+    this._parentElement.querySelector(".btn--next").textContent = "Confirm";
+  }
 
-  hideGoBack() {}
+  showNextStepBtn() {
+    this._parentElement.querySelector(".btn--next").textContent = "Next step";
+  }
 
-  showGoBack() {}
+  hideGoBack() {
+    this._parentElement.querySelector(".btn--back").classList.add("hide");
+  }
+
+  showGoBack() {
+    this._parentElement.querySelector(".btn--back").classList.remove("hide");
+  }
 }
 
 export default new NavigationBarView();
