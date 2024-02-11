@@ -3,10 +3,10 @@ import View from "./View";
 class NavigationBarView extends View {
   _parentElement = document.querySelector(".navigation__bar");
 
-  generateMarkup(_, _) {
+  generateMarkup(page, data) {
     return `
-      <button type="submit" class="btn--back">Next step</button>
-      <button class="btn--next">Back</button>
+      <button class="btn--back">Back</button>
+      <button type="submit" class="btn--next">Next step</button>
     `;
   }
 

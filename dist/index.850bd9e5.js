@@ -599,34 +599,89 @@ var _thankYouViewDefault = parcelHelpers.interopDefault(_thankYouView);
 var _config = require("./config");
 var _model = require("./model");
 var _modelDefault = parcelHelpers.interopDefault(_model);
-const goNext = function() {
-    // validate form
-    const currentPosition = (0, _modelDefault.default).getItem("currentPage").key;
-    const isFormValid = VIEWS_INSTANCE_MAP[currentPosition].isFormValid();
-    // if invalid
-    if (!isFormValid) return;
-    // if valid
-    // save data state & storage
-    const currentFormData = VIEWS_INSTANCE_MAP[currentPosition].getFormData();
-    (0, _modelDefault.default).updatePage(currentFormData, (0, _config.pageKeys)[currentPosition]);
-    // get next step data
-    const nextStep = currentPosition.router.navigate();
-    // loading spinner
-    VIEWS_INSTANCE_MAP[currentPosition].renderSpinner();
-    // render new page with data
-    // this.pageView.render(pageKeys[currentPage.position], currentPage);
-    // activateStep side bar
-    // navigate
-    (0, _modelDefault.default).updateState(currentPosition, "currentPage");
-// else
-// disable next button
-// return
+const goNext = async function() {
+    try {
+        const currentPosition = VIEWS_INSTANCE_MAP[(0, _modelDefault.default).getData("currentPage").key];
+        // validate form
+        const isFormValid = currentPosition.isFormValid();
+        // if invalid
+        if (!isFormValid) // show validation errors
+        return;
+        // if valid
+        // save data state
+        const currentFormData = currentPosition.getFormData();
+        (0, _modelDefault.default).updatePage(currentFormData, (0, _config.pageKeys)[(0, _modelDefault.default).getData("currentPage").key]);
+        // loading spinner
+        currentPosition.renderSpinner();
+        // get next step
+        const allPagesKeys = Object.values((0, _config.pageKeys));
+        const currentIndex = (0, _modelDefault.default).getData("currentPage").position;
+        const nextPageKey = allPagesKeys[currentIndex + 1];
+        // fetch next page data
+        const nextPageData = await (0, _modelDefault.default).fetchPageData(nextPageKey);
+        // render new page with data
+        (0, _pageViewDefault.default).render(nextPageKey, nextPageData);
+        if (nextPageKey === (0, _config.pageKeys).summary) (0, _addOnsViewDefault.default).addHandlerJumpToPage(jumpToPreviousPage);
+        // manage navigationBar
+        manageNavigationBar(nextPageKey);
+        // add event listeners to navigationBar
+        (0, _navigationBarViewDefault.default).addHandlerNavigateNext(goNext);
+        (0, _navigationBarViewDefault.default).addHandlerNavigateBack(goBack);
+        // activateStep side bar
+        (0, _sideBarViewDefault.default).activateStep(currentPage);
+        // update current position state
+        (0, _modelDefault.default).updateCurrentPosition(currentPageKey, currentIndex);
+    } catch (error) {
+        console.error("Error navigating to next step", error);
+    }
 };
-const goBack = function() {
-// get data
-// activateStep
-// change route
-// render UI with data
+const manageNavigationBar = function(pageKey) {
+    console.log((0, _config.pageKeys).personalInfo, pageKey, pageKey.key !== (0, _config.pageKeys).personalInfo);
+    pageKey !== (0, _config.pageKeys).personalInfo && (0, _navigationBarViewDefault.default).showGoBack();
+    pageKey === (0, _config.pageKeys).personalInfo && (0, _navigationBarViewDefault.default).hideGoBack();
+    pageKey === (0, _config.pageKeys).summary && (0, _navigationBarViewDefault.default).showConfirmBtn();
+    pageKey !== (0, _config.pageKeys).summary && (0, _navigationBarViewDefault.default).showNextStepBtn();
+    pageKey === (0, _config.pageKeys).thankYou && (0, _navigationBarViewDefault.default).hideBar();
+};
+const goBack = async function() {
+    // find current page
+    const currentPagePosition = (0, _modelDefault.default).getData("currentPage").position;
+    // get previous page
+    const allPagesKeys = Object.values((0, _config.pageKeys));
+    const previousPageKey = allPagesKeys[currentPagePosition - 1];
+    // loading spinner
+    VIEWS_INSTANCE_MAP[previousPageKey].renderSpinner();
+    // fetch next page data
+    const previousPageData = await (0, _modelDefault.default).fetchPageData(previousPageKey);
+    // get data of previous page
+    const previousPageFormData = (0, _modelDefault.default).getPageData(previousPageKey);
+    // render UI with data
+    (0, _pageViewDefault.default).render(previousPageKey, {
+        ...previousPageData,
+        ...previousPageFormData
+    });
+    // manage navigationBar
+    manageNavigationBar(previousPageKey);
+    // activateStep side bar
+    (0, _sideBarViewDefault.default).activateStep(previousPageKey);
+    // update current position state
+    const previousIndex = (0, _modelDefault.default).getData("currentPage").position - 1;
+    (0, _modelDefault.default).updateCurrentPosition(previousPageKey, previousIndex);
+};
+const jumpToPreviousPage = async function(pageKey) {
+    // fetch page data
+    const previousPageData = await (0, _modelDefault.default).fetchPageData(pageKey);
+    // get data of previous page
+    const previousPageFormData = (0, _modelDefault.default).getPageData(pageKey);
+    // render UI with data
+    (0, _pageViewDefault.default).render(pageKey, {
+        ...previousPageData,
+        ...previousPageFormData
+    });
+    // manage navigationBar
+    manageNavigationBar(pageKey);
+    // activateStep side bar
+    (0, _sideBarViewDefault.default).activateStep(pageKey);
 };
 const init = function() {
     // get state in localStorage if any
@@ -634,24 +689,24 @@ const init = function() {
     // update state with localStorage if any
     storedPages && (0, _modelDefault.default).updateStateWithStoredData(storedPages);
     // current page
-    const currentPage = (0, _modelDefault.default).getData("currentPage").key || (0, _config.pageKeys).personalInfo;
+    const currentPageKey1 = (0, _modelDefault.default).getData("currentPage")?.key || (0, _config.pageKeys).personalInfo;
     // update state with current page
-    if (!(0, _modelDefault.default).getData("currentPage").key) (0, _modelDefault.default).updateState(currentPage, "currentPage");
-    // render current page
-    (0, _pageViewDefault.default).render(currentPage);
+    if (!(0, _modelDefault.default).getData("currentPage")?.key) (0, _modelDefault.default).updateState(currentPageKey1, "currentPage");
+    // // render current page
+    // const pageData = model.getPageData(currentPageKey);
+    // pageView.render(currentPageKey, pageData);
     // render side bar
-    (0, _sideBarViewDefault.default).render();
-    (0, _sideBarViewDefault.default).activateStep(currentPage);
+    // sideBarView.render();
+    // sideBarView.activateStep(currentPageKey);
     // render navigationBar
     (0, _navigationBarViewDefault.default).render();
-    currentPage.key === (0, _config.pageKeys).personalInfo && (0, _navigationBarViewDefault.default).hideGoBack();
-    currentPage.key === (0, _config.pageKeys).summary && (0, _navigationBarViewDefault.default).updateBtnText("confirm");
-    currentPage.key === (0, _config.pageKeys).thankYou && (0, _navigationBarViewDefault.default).hideBar();
-    // add event listeners to navigationBar
-    (0, _navigationBarViewDefault.default).addHandlerNavigateNext(goNext);
-    (0, _navigationBarViewDefault.default).addHandlerNavigateBack(goBack);
+    // manage navigationBar
+    manageNavigationBar(currentPageKey1);
+// add event listeners to navigationBar
+// navigationBarView.addHandlerNavigateNext(goNext);
+// navigationBarView.addHandlerNavigateBack(goBack);
 };
-// init();
+init();
 const VIEWS_INSTANCE_MAP = {
     PERSONAL_INFO: (0, _personalInfoViewDefault.default),
     SELECT_PLAN: (0, _selectPlanViewDefault.default),
@@ -659,7 +714,6 @@ const VIEWS_INSTANCE_MAP = {
     SUMMARY: (0, _summaryViewDefault.default),
     THANK_YOU: (0, _thankYouViewDefault.default)
 };
-console.log(VIEWS_INSTANCE_MAP["THANK_YOU"].isFormValid());
 
 },{"./Views/addOnsView":"d9TVH","./Views/navigationBarView":"9UuZH","./Views/pageView":"5iRew","./Views/personalInfoView":"d3QS3","./Views/selectPlanView":"9NSui","./Views/sideBarView":"4sfzo","./Views/summaryView":"aOMoz","./Views/thankYouView":"btEkN","./config":"4Wc5b","./model":"Py0LO","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"d9TVH":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -677,7 +731,35 @@ class AddOnsView extends (0, _viewDefault.default) {
 }
 exports.default = new AddOnsView();
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./View":"fgUH5"}],"gkKU3":[function(require,module,exports) {
+},{"./View":"fgUH5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"fgUH5":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+class View {
+    #data;
+    render(page, data) {
+        this.#data = data;
+        const markup = this.generateMarkup(page, data);
+        this.clear();
+        this._parentElement.insertAdjacentHTML("afterbegin", markup);
+    }
+    update(page) {
+    // update side bar
+    }
+    isFormValid() {
+        this.validateForm();
+        return this._parentElement.isFormValid();
+    }
+    getFormData() {
+        return this._parentElement.formData();
+    }
+    renderSpinner() {}
+    clear() {
+        this._parentElement.innerHTML = "";
+    }
+}
+exports.default = View;
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gkKU3":[function(require,module,exports) {
 exports.interopDefault = function(a) {
     return a && a.__esModule ? a : {
         default: a
@@ -707,82 +789,54 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"fgUH5":[function(require,module,exports) {
+},{}],"9UuZH":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-class View {
-    #data;
-    render(page, data) {
-        this.#data = data;
-        const markup = this.generateMarkup(page, data);
-        this.clear();
-        this._parentElement.insertAdjacentHTML("afterbegin", markup);
-    }
-    update(page) {
-    // update side bar
-    }
-    isFormValid() {
-        this.validateForm();
-        return this._parentElement.isFormValid;
-    }
-    getFormData() {
-        return this._parentElement._formData;
-    }
-    renderSpinner() {}
-    clear() {
-        this._parentElement.innerHTML = "";
-    }
-}
-exports.default = View;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"9UuZH":[function(require,module,exports) {
-// import iconAdvanced from "url:../../assets/images/icon-advanced.svg";
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _config = require("../config");
 var _view = require("./View");
 var _viewDefault = parcelHelpers.interopDefault(_view);
 class NavigationBarView extends (0, _viewDefault.default) {
-    generateMarkup(_, data) {
-        return "markup";
+    _parentElement = document.querySelector(".navigation__bar");
+    generateMarkup(page, data) {
+        return `
+      <button class="btn--back">Back</button>
+      <button type="submit" class="btn--next">Next step</button>
+    `;
     }
     addHandlerNavigateNext(handler) {
-        window.addEventListener("click", function(e) {
-            // e.preventDefault();
-            handler();
+        const form = document.querySelector("form");
+        form.addEventListener("submit", async function(e) {
+            e.preventDefault();
+            await handler();
         });
     }
     addHandlerNavigateBack(handler) {
-        window.addEventListener("click", function(e) {
-            // e.preventDefault();
-            handler();
+        this._parentElement.querySelector(".btn--back").addEventListener("click", async function(e) {
+            e.preventDefault();
+            await handler();
         });
     }
-    updateBtnText() {}
-    hideBar() {}
-    showBar() {}
-    hideGoBack() {}
-    showGoBack() {}
-    disableSubmit() {}
-    enableSubmit() {}
+    hideBar() {
+        this._parentElement.classList.add("hide");
+    }
+    showBar() {
+        this._parentElement.classList.remove("hide");
+    }
+    showConfirmBtn() {
+        this._parentElement.querySelector(".btn--next").textContent = "Confirm";
+    }
+    showNextStepBtn() {
+        this._parentElement.querySelector(".btn--next").textContent = "Next step";
+    }
+    hideGoBack() {
+        this._parentElement.querySelector(".btn--back").classList.add("hide");
+    }
+    showGoBack() {
+        this._parentElement.querySelector(".btn--back").classList.remove("hide");
+    }
 }
 exports.default = new NavigationBarView();
 
-},{"../config":"4Wc5b","./View":"fgUH5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4Wc5b":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "pageKeys", ()=>pageKeys);
-const pageKeys = {
-    personalInfo: "PERSONAL_INFO",
-    selectPlan: "SELECT_PLAN",
-    personalInfo: "PERSONAL_INFO",
-    selectPlan: "SELECT_PLAN",
-    addOns: "ADD_ONS",
-    summary: "SUMMARY",
-    thankYou: "THANK_YOU"
-};
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5iRew":[function(require,module,exports) {
+},{"./View":"fgUH5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5iRew":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _view = require("./View");
@@ -819,17 +873,32 @@ parcelHelpers.defineInteropFlag(exports);
 var _view = require("./View");
 var _viewDefault = parcelHelpers.interopDefault(_view);
 class PersonalInfoView extends (0, _viewDefault.default) {
-    #parentElement = "personal__info";
-    #data;
-    validatedForm() {
+    _parentElement = "PersonalInfoView";
+    _formData;
+    _isFormValid;
+    get isFormValid() {
+        return this._isFormValid;
+    }
+    get formData() {
+        return this._formData;
+    }
+    validateForm() {
         // this.#parentElement get form etc
-        console.log("validate personal info");
-        return "formdata";
+        console.log("PersonalInfoView");
+        this._isFormValid = "PersonalInfoView";
+        this._formData = "";
+    // return "";
+    }
+    validateOnValueChange(input) {
+        input.addEventListener("input", (e)=>{
+            console.log(e.target.value);
+        });
     }
 }
 exports.default = new PersonalInfoView();
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./View":"fgUH5"}],"9NSui":[function(require,module,exports) {
+},{"./View":"fgUH5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"9NSui":[function(require,module,exports) {
+// import iconAdvanced from "url:../../assets/images/icon-advanced.svg";
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _view = require("./View");
@@ -846,14 +915,16 @@ class SelectPlanView extends (0, _viewDefault.default) {
 }
 exports.default = new SelectPlanView();
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./View":"fgUH5"}],"4sfzo":[function(require,module,exports) {
+},{"./View":"fgUH5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4sfzo":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _view = require("./View");
 var _viewDefault = parcelHelpers.interopDefault(_view);
 class SideBarView extends (0, _viewDefault.default) {
     generateMarkup() {}
-    activateStep(currentPage) {}
+    activateStep(currentPageKey) {
+        this.update();
+    }
 }
 exports.default = new SideBarView();
 
@@ -870,10 +941,16 @@ class SummaryView extends (0, _viewDefault.default) {
         console.log("validate personal info");
         return "formdata";
     }
+    addHandlerJumpToPage(handler) {
+        // parent.get change text
+        window.addEventListener("click", async function(e) {
+            await handler();
+        });
+    }
 }
 exports.default = new SummaryView();
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./View":"fgUH5"}],"btEkN":[function(require,module,exports) {
+},{"./View":"fgUH5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"btEkN":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _view = require("./View");
@@ -892,12 +969,25 @@ class ThankYouView extends (0, _viewDefault.default) {
 }
 exports.default = new ThankYouView();
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./View":"fgUH5"}],"Py0LO":[function(require,module,exports) {
+},{"./View":"fgUH5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4Wc5b":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "pageKeys", ()=>pageKeys);
+const pageKeys = {
+    personalInfo: "PERSONAL_INFO",
+    selectPlan: "SELECT_PLAN",
+    addOns: "ADD_ONS",
+    summary: "SUMMARY",
+    thankYou: "THANK_YOU"
+};
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"Py0LO":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _config = require("./config");
 class Model {
     #state = {
-        page: {
+        pages: {
             PERSONAL_INFO: {
                 name: "",
                 email: "",
@@ -918,18 +1008,46 @@ class Model {
             position: 0
         }
     };
-    getState() {}
-    getPageData(page) {}
-    fetchPageData(page) {}
+    get state() {
+        return this.#state;
+    }
+    #storeState() {
+    // local storage.set
+    }
+    getPageData(page) {
+        return this.#state.pages[page];
+    }
+    async fetchPageData(page) {
+        try {
+            switch(page){
+                case (0, _config.pageKeys).personalInfo:
+                    const url = "baseUrl/personal";
+                    fetch("www.test").then((res)=>{
+                        if (!res.ok) throw new Error("errore");
+                        return res.json();
+                    }).then((data)=>data);
+                    break;
+                default:
+                    Promise.resolve();
+                    break;
+            }
+        } catch (error) {}
+    }
     getData(key) {}
     updateState(data, key) {
-        this.state = {
+        this.#state = {
             ...this.#state,
             [key]: data
         };
         this.#storeState();
     }
-    updatePage(data, page) {}
+    updateCurrentPosition(key, position) {
+        this.#state.currentPage.position = position;
+        this.#state.currentPage.key = key;
+    }
+    updatePage(data, page) {
+        this.#state.pages[page] = data;
+    }
     updateStateWithStoredData(pages) {
         this.#state = {
             ...this.#state,
@@ -941,12 +1059,9 @@ class Model {
             }
         };
     }
-    #storeState() {
-    // local storage.set
-    }
 }
 exports.default = new Model();
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["7uCb0","1GgH0"], "1GgH0", "parcelRequire94c2")
+},{"./config":"4Wc5b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["7uCb0","1GgH0"], "1GgH0", "parcelRequire94c2")
 
 //# sourceMappingURL=index.850bd9e5.js.map

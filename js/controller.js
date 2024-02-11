@@ -57,11 +57,11 @@ const goNext = async function () {
 };
 
 const manageNavigationBar = function (pageKey) {
-  pageKey.key !== pageKeys.personalInfo && navigationBarView.showGoBack();
-  pageKey.key === pageKeys.personalInfo && navigationBarView.hideGoBack();
-  pageKey.key === pageKeys.summary && navigationBarView.showConfirmBtn();
-  pageKey.key !== pageKeys.summary && navigationBarView.showNextStepBtn();
-  pageKey.key === pageKeys.thankYou && navigationBarView.hideBar();
+  pageKey !== pageKeys.personalInfo && navigationBarView.showGoBack();
+  pageKey === pageKeys.personalInfo && navigationBarView.hideGoBack();
+  pageKey === pageKeys.summary && navigationBarView.showConfirmBtn();
+  pageKey !== pageKeys.summary && navigationBarView.showNextStepBtn();
+  pageKey === pageKeys.thankYou && navigationBarView.hideBar();
 };
 
 const goBack = async function () {
@@ -114,34 +114,28 @@ const init = function () {
 
   // current page
   const currentPageKey =
-    model.getData("currentPage").key || pageKeys.personalInfo;
+    model.getData("currentPage")?.key || pageKeys.personalInfo;
   // update state with current page
-  if (!model.getData("currentPage").key) {
+  if (!model.getData("currentPage")?.key) {
     model.updateState(currentPageKey, "currentPage");
   }
 
-  // render current page
-  const pageData = model.getPageData(currentPageKey);
-  pageView.render(currentPageKey, pageData);
+  // // render current page
+  // const pageData = model.getPageData(currentPageKey);
+  // pageView.render(currentPageKey, pageData);
 
   // render side bar
-  sideBarView.render();
-  sideBarView.activateStep(currentPageKey);
+  // sideBarView.render();
+  // sideBarView.activateStep(currentPageKey);
 
   // render navigationBar
   navigationBarView.render();
   // manage navigationBar
-  currentPageKey.key === pageKeys.personalInfo &&
-    navigationBarView.hideGoBack();
-
-  currentPageKey.key === pageKeys.summary &&
-    navigationBarView.updateBtnText("confirm");
-
-  currentPageKey.key === pageKeys.thankYou && navigationBarView.hideBar();
+  manageNavigationBar(currentPageKey);
 
   // add event listeners to navigationBar
-  navigationBarView.addHandlerNavigateNext(goNext);
-  navigationBarView.addHandlerNavigateBack(goBack);
+  // navigationBarView.addHandlerNavigateNext(goNext);
+  // navigationBarView.addHandlerNavigateBack(goBack);
 };
 
 init();
