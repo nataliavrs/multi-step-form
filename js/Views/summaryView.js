@@ -10,6 +10,13 @@ class SummaryView extends View {
 
     return "formdata";
   }
+
+  addHandlerJumpToPage(handler) {
+    // parent.get change text
+    window.addEventListener("click", async function (e) {
+      await handler();
+    });
+  }
 }
 
 export default new SummaryView();

@@ -36,10 +36,13 @@ const goNext = async function () {
     const nextPageKey = allPagesKeys[currentIndex + 1];
     // fetch next page data
     const nextPageData = await model.fetchPageData(nextPageKey);
-    // render navigation bar
-    // TODO
     // render new page with data
     pageView.render(nextPageKey, nextPageData);
+    if (nextPageKey === pageKeys.summary) {
+      addOnsView.addHandlerJumpToPage(jumpToPreviousPage);
+    }
+    // manage navigationBar
+    manageNavigationBar(nextPageKey);
     // activateStep side bar
     sideBarView.activateStep(currentPage);
     // update current position state
@@ -47,6 +50,15 @@ const goNext = async function () {
   } catch (error) {
     console.error("Error navigating to next step", error);
   }
+};
+
+const manageNavigationBar = function (pageKey) {
+  pageKey.key !== pageKeys.personalInfo && navigationBarView.showGoBack();
+  pageKey.key === pageKeys.personalInfo && navigationBarView.hideGoBack();
+  pageKey.key === pageKeys.summary &&
+    navigationBarView.updateBtnText("confirm");
+  pageKey.key !== pageKeys.summary && navigationBarView.updateBtnText("next");
+  pageKey.key === pageKeys.thankYou && navigationBarView.hideBar();
 };
 
 const goBack = async function () {
@@ -66,8 +78,8 @@ const goBack = async function () {
     ...previousPageData,
     ...previousPageFormData,
   });
-  // render navigation bar
-  // TODO
+  // manage navigationBar
+  manageNavigationBar(previousPageKey);
   // activateStep side bar
   sideBarView.activateStep(previousPageKey);
   // update current position state
@@ -75,9 +87,21 @@ const goBack = async function () {
   model.updateCurrentPosition(previousPageKey, previousIndex);
 };
 
-// TODO jumpToPreviousPage
-
-// TODO renderNavigationBar
+const jumpToPreviousPage = async function (pageKey) {
+  // fetch page data
+  const previousPageData = await model.fetchPageData(pageKey);
+  // get data of previous page
+  const previousPageFormData = model.getPageData(pageKey);
+  // render UI with data
+  pageView.render(pageKey, {
+    ...previousPageData,
+    ...previousPageFormData,
+  });
+  // manage navigationBar
+  manageNavigationBar(pageKey);
+  // activateStep side bar
+  sideBarView.activateStep(pageKey);
+};
 
 const init = function () {
   // get state in localStorage if any
@@ -102,11 +126,15 @@ const init = function () {
 
   // render navigationBar
   navigationBarView.render();
+  // manage navigationBar
   currentPageKey.key === pageKeys.personalInfo &&
     navigationBarView.hideGoBack();
+
   currentPageKey.key === pageKeys.summary &&
     navigationBarView.updateBtnText("confirm");
+
   currentPageKey.key === pageKeys.thankYou && navigationBarView.hideBar();
+
   // add event listeners to navigationBar
   navigationBarView.addHandlerNavigateNext(goNext);
   navigationBarView.addHandlerNavigateBack(goBack);
