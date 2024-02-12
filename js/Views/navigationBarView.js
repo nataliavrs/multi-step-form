@@ -18,6 +18,14 @@ class NavigationBarView extends View {
       });
   }
 
+  addHandlerNavigateNext(handler) {
+    const btnNxt = document.querySelector(".btn--next");
+    btnNxt.addEventListener("click", async function (e) {
+      e.preventDefault();
+      await handler();
+    });
+  }
+
   hideBar() {
     this._parentElement.classList.add("hide");
   }

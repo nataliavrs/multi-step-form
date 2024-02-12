@@ -131,10 +131,10 @@ const init = function () {
   // render navigationBar
   navigationBarView.render();
   // manage navigationBar
-  // manageNavigationBar(currentPageKey);
+  manageNavigationBar(currentPageKey);
 
   // add event listeners
-  // VIEWS_INSTANCE_MAP[currentPageKey].addHandlerNavigateNext(goNext);
+  navigationBarView.addHandlerNavigateNext(goNext);
   navigationBarView.addHandlerNavigateBack(goBack);
 };
 

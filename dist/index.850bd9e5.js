@@ -700,9 +700,9 @@ const init = function() {
     // render navigationBar
     (0, _navigationBarViewDefault.default).render();
     // manage navigationBar
-    // manageNavigationBar(currentPageKey);
+    manageNavigationBar(currentPageKey1);
     // add event listeners
-    // VIEWS_INSTANCE_MAP[currentPageKey].addHandlerNavigateNext(goNext);
+    (0, _navigationBarViewDefault.default).addHandlerNavigateNext(goNext);
     (0, _navigationBarViewDefault.default).addHandlerNavigateBack(goBack);
 };
 const VIEWS_INSTANCE_MAP = {
@@ -740,13 +740,6 @@ class View {
         const markup = this.generateMarkup(page, data);
         this.clear();
         this._parentElement.insertAdjacentHTML("afterbegin", markup);
-    }
-    addHandlerNavigateNext(handler) {
-        const form = document.querySelector("form");
-        form.addEventListener("submit", async function(e) {
-            e.preventDefault();
-            await handler();
-        });
     }
     update(page) {
     // update side bar
@@ -810,6 +803,13 @@ class NavigationBarView extends (0, _viewDefault.default) {
     }
     addHandlerNavigateBack(handler) {
         this._parentElement.querySelector(".btn--back").addEventListener("click", async function(e) {
+            await handler();
+        });
+    }
+    addHandlerNavigateNext(handler) {
+        const btnNxt = document.querySelector(".btn--next");
+        btnNxt.addEventListener("click", async function(e) {
+            e.preventDefault();
             await handler();
         });
     }
