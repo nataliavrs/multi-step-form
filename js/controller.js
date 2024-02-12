@@ -125,8 +125,8 @@ const init = function () {
   // pageView.render(currentPageKey, pageData);
 
   // render side bar
-  // sideBarView.render();
-  // sideBarView.activateStep(currentPageKey);
+  sideBarView.render();
+  sideBarView.activateStep(currentPageKey);
 
   // render navigationBar
   navigationBarView.render();

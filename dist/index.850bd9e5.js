@@ -695,8 +695,8 @@ const init = function() {
     // const pageData = model.getPageData(currentPageKey);
     // pageView.render(currentPageKey, pageData);
     // render side bar
-    // sideBarView.render();
-    // sideBarView.activateStep(currentPageKey);
+    (0, _sideBarViewDefault.default).render();
+    (0, _sideBarViewDefault.default).activateStep(currentPageKey1);
     // render navigationBar
     (0, _navigationBarViewDefault.default).render();
     // manage navigationBar
@@ -916,17 +916,58 @@ exports.default = new SelectPlanView();
 },{"./View":"fgUH5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4sfzo":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
+var _config = require("../config");
 var _view = require("./View");
 var _viewDefault = parcelHelpers.interopDefault(_view);
 class SideBarView extends (0, _viewDefault.default) {
-    generateMarkup() {}
+    _parentElement = document.querySelector(".side__bar");
+    generateMarkup() {
+        return `
+    <div class="side__bar--steps">
+      ${this.getSteps()}
+    </div>`;
+    }
     activateStep(currentPageKey) {
-        this.update();
+        // this.update();
+        const stepsNodes = this._parentElement.querySelectorAll(".side__bar--step");
+        console.log(Array.from(stepsNodes));
+        const currentStep = Array.from(stepsNodes).find((step)=>{
+            return step.dataset.key === currentPageKey;
+        });
+        console.log(currentStep);
+        currentStep.querySelector(".position-circle").classList.add("active");
+    }
+    getSteps() {
+        const pages = Object.values((0, _config.pageKeys)).slice(0, -1);
+        return pages.map((page, index)=>{
+            const position = index + 1;
+            return `<div class="side__bar--step" data-key="${page}">
+              <div class="position-circle">
+                <span class="position-number">${position}</span>
+              </div>
+              <div class="title">
+                <span class="position-name">STEP ${position}</span>
+                <span class="page-title">${page.replace("_", " ")}</span>
+              </div>
+      </div>`;
+        }).join("");
     }
 }
 exports.default = new SideBarView();
 
-},{"./View":"fgUH5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"aOMoz":[function(require,module,exports) {
+},{"./View":"fgUH5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../config":"4Wc5b"}],"4Wc5b":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "pageKeys", ()=>pageKeys);
+const pageKeys = {
+    personalInfo: "PERSONAL_INFO",
+    selectPlan: "SELECT_PLAN",
+    addOns: "ADD_ONS",
+    summary: "SUMMARY",
+    thankYou: "THANK_YOU"
+};
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"aOMoz":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _view = require("./View");
@@ -967,19 +1008,7 @@ class ThankYouView extends (0, _viewDefault.default) {
 }
 exports.default = new ThankYouView();
 
-},{"./View":"fgUH5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4Wc5b":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "pageKeys", ()=>pageKeys);
-const pageKeys = {
-    personalInfo: "PERSONAL_INFO",
-    selectPlan: "SELECT_PLAN",
-    addOns: "ADD_ONS",
-    summary: "SUMMARY",
-    thankYou: "THANK_YOU"
-};
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"Py0LO":[function(require,module,exports) {
+},{"./View":"fgUH5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"Py0LO":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _config = require("./config");

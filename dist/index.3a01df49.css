@@ -2,4 +2,9 @@
   opacity: 0;
 }
 
+.active {
+  color: #000;
+  background-color: pink;
+}
+
 /*# sourceMappingURL=index.3a01df49.css.map */
