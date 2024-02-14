@@ -921,20 +921,23 @@ var _view = require("./View");
 var _viewDefault = parcelHelpers.interopDefault(_view);
 class SideBarView extends (0, _viewDefault.default) {
     _parentElement = document.querySelector(".side__bar");
+    _currentStep;
     generateMarkup() {
         return `
     <div class="side__bar--steps">
       ${this.getSteps()}
     </div>`;
     }
+    // TODO testare
     activateStep(currentPageKey) {
-        // this.update();
+        if (this._currentStep) this._currentStep.classList.remove("active");
         const stepsNodes = this._parentElement.querySelectorAll(".side__bar--step");
         console.log(Array.from(stepsNodes));
         const currentStep = Array.from(stepsNodes).find((step)=>{
             return step.dataset.key === currentPageKey;
         });
         console.log(currentStep);
+        this._currentStep = currentStep;
         currentStep.querySelector(".position-circle").classList.add("active");
     }
     getSteps() {
@@ -955,7 +958,7 @@ class SideBarView extends (0, _viewDefault.default) {
 }
 exports.default = new SideBarView();
 
-},{"./View":"fgUH5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../config":"4Wc5b"}],"4Wc5b":[function(require,module,exports) {
+},{"../config":"4Wc5b","./View":"fgUH5","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4Wc5b":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "pageKeys", ()=>pageKeys);
