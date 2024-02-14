@@ -601,6 +601,7 @@ var _model = require("./model");
 var _modelDefault = parcelHelpers.interopDefault(_model);
 const goNext = async function() {
     try {
+        // TODO
         console.log((0, _modelDefault.default).getData("currentPage")?.key);
         const currentPosition = VIEWS_INSTANCE_MAP[(0, _modelDefault.default).getData("currentPage")?.key];
         // validate form
@@ -691,7 +692,8 @@ const init = function() {
     // current page
     const currentPageKey1 = (0, _modelDefault.default).getData("currentPage")?.key || (0, _config.pageKeys).personalInfo;
     // update state with current page
-    if (!(0, _modelDefault.default).getData("currentPage")?.key) (0, _modelDefault.default).updateState({
+    if (!(0, _modelDefault.default).getData("currentPage")?.key) // TODO
+    (0, _modelDefault.default).updateState({
         key: currentPageKey1,
         position: 0
     }, "currentPage");

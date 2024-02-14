@@ -11,6 +11,7 @@ import model from "./model";
 
 const goNext = async function () {
   try {
+    // TODO
     console.log(model.getData("currentPage")?.key);
     const currentPosition =
       VIEWS_INSTANCE_MAP[model.getData("currentPage")?.key];
@@ -118,6 +119,7 @@ const init = function () {
     model.getData("currentPage")?.key || pageKeys.personalInfo;
   // update state with current page
   if (!model.getData("currentPage")?.key) {
+    // TODO
     model.updateState({ key: currentPageKey, position: 0 }, "currentPage");
   }
 
