@@ -55,12 +55,16 @@ class Model {
     } catch (error) {}
   }
 
-  getData(key) {}
+  getData(key) {
+    console.log(this.#state[key]);
+    return this.#state[key];
+  }
 
   updateState(data, key) {
     this.#state = { ...this.#state, [key]: data };
 
     this.#storeState();
+    console.log(this.#state);
   }
 
   updateCurrentPosition(key, position) {

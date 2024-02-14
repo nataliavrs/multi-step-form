@@ -11,8 +11,9 @@ import model from "./model";
 
 const goNext = async function () {
   try {
+    console.log(model.getData("currentPage")?.key);
     const currentPosition =
-      VIEWS_INSTANCE_MAP[model.getData("currentPage").key];
+      VIEWS_INSTANCE_MAP[model.getData("currentPage")?.key];
     // validate form
     const isFormValid = currentPosition.isFormValid();
     // if invalid
@@ -117,12 +118,12 @@ const init = function () {
     model.getData("currentPage")?.key || pageKeys.personalInfo;
   // update state with current page
   if (!model.getData("currentPage")?.key) {
-    model.updateState(currentPageKey, "currentPage");
+    model.updateState({ key: currentPageKey, position: 0 }, "currentPage");
   }
 
-  // // render current page
-  // const pageData = model.getPageData(currentPageKey);
-  // pageView.render(currentPageKey, pageData);
+  // render current page
+  const pageData = model.getPageData(currentPageKey);
+  pageView.render(currentPageKey, pageData);
 
   // render side bar
   sideBarView.render();

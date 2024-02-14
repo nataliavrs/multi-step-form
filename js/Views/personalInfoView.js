@@ -10,6 +10,8 @@ class PersonalInfoView extends View {
   }
 
   get formData() {
+    const form = document.getElementById("form");
+    console.log(form.elements);
     return this._formData;
   }
 

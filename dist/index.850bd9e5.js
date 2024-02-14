@@ -601,7 +601,8 @@ var _model = require("./model");
 var _modelDefault = parcelHelpers.interopDefault(_model);
 const goNext = async function() {
     try {
-        const currentPosition = VIEWS_INSTANCE_MAP[(0, _modelDefault.default).getData("currentPage").key];
+        console.log((0, _modelDefault.default).getData("currentPage")?.key);
+        const currentPosition = VIEWS_INSTANCE_MAP[(0, _modelDefault.default).getData("currentPage")?.key];
         // validate form
         const isFormValid = currentPosition.isFormValid();
         // if invalid
@@ -690,10 +691,13 @@ const init = function() {
     // current page
     const currentPageKey1 = (0, _modelDefault.default).getData("currentPage")?.key || (0, _config.pageKeys).personalInfo;
     // update state with current page
-    if (!(0, _modelDefault.default).getData("currentPage")?.key) (0, _modelDefault.default).updateState(currentPageKey1, "currentPage");
-    // // render current page
-    // const pageData = model.getPageData(currentPageKey);
-    // pageView.render(currentPageKey, pageData);
+    if (!(0, _modelDefault.default).getData("currentPage")?.key) (0, _modelDefault.default).updateState({
+        key: currentPageKey1,
+        position: 0
+    }, "currentPage");
+    // render current page
+    const pageData = (0, _modelDefault.default).getPageData(currentPageKey1);
+    (0, _pageViewDefault.default).render(currentPageKey1, pageData);
     // render side bar
     (0, _sideBarViewDefault.default).render();
     (0, _sideBarViewDefault.default).activateStep(currentPageKey1);
@@ -840,14 +844,26 @@ parcelHelpers.defineInteropFlag(exports);
 var _view = require("./View");
 var _viewDefault = parcelHelpers.interopDefault(_view);
 class PageView extends (0, _viewDefault.default) {
-    _parentElement = "pageContainer";
-    #data;
+    _parentElement = document.querySelector(".page__container");
+    // #data;
     generateMarkup(pageKey, data) {
         return this.PAGE_LAYOUT_MAP[pageKey](data);
     }
     PAGE_LAYOUT_MAP = {
         PERSONAL_INFO: (data)=>{
-            return "form";
+            return `
+        <div class="page__title">
+          <h1>Personal info</h1>
+          <p>Please provide your name, email address and phone number</p>
+        </div>
+        <form id="form">
+          <label for="name">Name</label>
+          <input type="text" name="name" value="${data.name || ""}" />
+          <label for="email">Email</label>
+          <input type="text" name="email" value="${data.email || ""}" />
+          <label for="phone">Phone</label>
+          <input type="text" name="phone" value="${data.phone || ""}" />
+        </form>`;
         },
         SELECT_PLAN: (data)=>{
             return "";
@@ -878,6 +894,8 @@ class PersonalInfoView extends (0, _viewDefault.default) {
         return this._isFormValid;
     }
     get formData() {
+        const form = document.getElementById("form");
+        console.log(form.elements);
         return this._formData;
     }
     validateForm() {
@@ -1063,13 +1081,17 @@ class Model {
             }
         } catch (error) {}
     }
-    getData(key) {}
+    getData(key) {
+        console.log(this.#state[key]);
+        return this.#state[key];
+    }
     updateState(data, key) {
         this.#state = {
             ...this.#state,
             [key]: data
         };
         this.#storeState();
+        console.log(this.#state);
     }
     updateCurrentPosition(key, position) {
         this.#state.currentPage.position = position;
