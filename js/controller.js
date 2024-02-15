@@ -14,9 +14,9 @@ const goNext = async function () {
     // TODO
     console.log(model.getData("currentPage")?.key);
     const currentPosition =
-      VIEWS_INSTANCE_MAP[model.getData("currentPage")?.key];
+      VIEWS_INSTANCE_MAP["SELECT_PLAN" || model.getData("currentPage")?.key];
     // validate form
-    const isFormValid = currentPosition.isFormValid();
+    const isFormValid = currentPosition.isFormValid;
     // if invalid
     if (!isFormValid) {
       // show validation errors
@@ -116,7 +116,11 @@ const init = function () {
 
   // current page
   const currentPageKey =
-    model.getData("currentPage")?.key || pageKeys.personalInfo;
+    pageKeys.summary ||
+    pageKeys.thankYou ||
+    pageKeys.addOns ||
+    model.getData("currentPage")?.key ||
+    pageKeys.personalInfo;
   // update state with current page
   if (!model.getData("currentPage")?.key) {
     // TODO

@@ -6,6 +6,8 @@ class SelectPlanView extends View {
   #parentElement = "select__plan";
   #data;
 
+  // TODO if plan yearly there is discount
+
   addHandlerSelectPlan(handler) {
     handler(selectedPlan);
   }
