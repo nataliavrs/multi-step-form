@@ -29,7 +29,7 @@ class Model {
   }
 
   #storeState() {
-    // local storage.set
+    localStorage.setItem("pages", JSON.stringify(this.state.pages));
   }
 
   getPageData(page) {
@@ -60,9 +60,8 @@ class Model {
     return this.#state[key];
   }
 
-  updateState(data, key) {
+  updateState(key, data) {
     this.#state = { ...this.#state, [key]: data };
-
     this.#storeState();
     console.log(this.#state);
   }

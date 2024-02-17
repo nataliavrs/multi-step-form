@@ -116,15 +116,11 @@ const init = function () {
 
   // current page
   const currentPageKey =
-    pageKeys.summary ||
-    pageKeys.thankYou ||
-    pageKeys.addOns ||
-    model.getData("currentPage")?.key ||
-    pageKeys.personalInfo;
+    model.getData("currentPage")?.key || pageKeys.personalInfo;
   // update state with current page
   if (!model.getData("currentPage")?.key) {
     // TODO
-    model.updateState({ key: currentPageKey, position: 0 }, "currentPage");
+    model.updateState("currentPage", { key: currentPageKey, position: 0 });
   }
 
   // render current page
