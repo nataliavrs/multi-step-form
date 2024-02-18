@@ -601,11 +601,10 @@ var _model = require("./model");
 var _modelDefault = parcelHelpers.interopDefault(_model);
 const goNext = async function() {
     try {
-        // TODO
         console.log((0, _modelDefault.default).getData("currentPage")?.key);
-        const currentPosition = VIEWS_INSTANCE_MAP["SELECT_PLAN"];
+        const currentPosition = VIEWS_INSTANCE_MAP[(0, _modelDefault.default).getData("currentPage")?.key];
         // validate form
-        const isFormValid = currentPosition.isFormValid;
+        const isFormValid = "mock";
         // if invalid
         if (!isFormValid) // show validation errors
         return;
@@ -630,9 +629,9 @@ const goNext = async function() {
         (0, _navigationBarViewDefault.default).addHandlerNavigateNext(goNext);
         (0, _navigationBarViewDefault.default).addHandlerNavigateBack(goBack);
         // activateStep side bar
-        (0, _sideBarViewDefault.default).activateStep(currentPage);
+        (0, _sideBarViewDefault.default).activateStep(nextPageKey);
         // update current position state
-        (0, _modelDefault.default).updateCurrentPosition(currentPageKey, currentIndex);
+        (0, _modelDefault.default).updateCurrentPosition(nextPageKey, currentIndex + 1);
     } catch (error) {
         console.error("Error navigating to next step", error);
     }
@@ -690,23 +689,22 @@ const init = function() {
     // update state with localStorage if any
     storedPages && (0, _modelDefault.default).updateStateWithStoredData(storedPages);
     // current page
-    const currentPageKey1 = (0, _modelDefault.default).getData("currentPage")?.key || (0, _config.pageKeys).personalInfo;
+    const currentPageKey = (0, _modelDefault.default).getData("currentPage")?.key || (0, _config.pageKeys).personalInfo;
     // update state with current page
-    if (!(0, _modelDefault.default).getData("currentPage")?.key) // TODO
-    (0, _modelDefault.default).updateState("currentPage", {
-        key: currentPageKey1,
+    if (!(0, _modelDefault.default).getData("currentPage")?.key) (0, _modelDefault.default).updateState("currentPage", {
+        key: currentPageKey,
         position: 0
     });
     // render current page
-    const pageData = (0, _modelDefault.default).getPageData(currentPageKey1);
-    (0, _pageViewDefault.default).render(currentPageKey1, pageData);
+    const pageData = (0, _modelDefault.default).getPageData(currentPageKey);
+    (0, _pageViewDefault.default).render(currentPageKey, pageData);
     // render side bar
     (0, _sideBarViewDefault.default).render();
-    (0, _sideBarViewDefault.default).activateStep(currentPageKey1);
+    (0, _sideBarViewDefault.default).activateStep(currentPageKey);
     // render navigationBar
     (0, _navigationBarViewDefault.default).render();
     // manage navigationBar
-    manageNavigationBar(currentPageKey1);
+    manageNavigationBar(currentPageKey);
     // add event listeners
     (0, _navigationBarViewDefault.default).addHandlerNavigateNext(goNext);
     (0, _navigationBarViewDefault.default).addHandlerNavigateBack(goBack);
@@ -733,6 +731,12 @@ class AddOnsView extends (0, _viewDefault.default) {
         console.log("validate personal info");
         return "formdata";
     }
+    addHandlerJumpToPage(handler) {
+    // const addOn = document.querySelector(".add-on-change");
+    // addOn.addEventListener("click", function (e) {
+    //   handler();
+    // });
+    }
 }
 exports.default = new AddOnsView();
 
@@ -755,10 +759,18 @@ class View {
         return this._parentElement.isFormValid();
     }
     getFormData() {
-        return this._parentElement.formData();
+        return "";
     }
-    renderSpinner() {}
+    renderSpinner() {
+        const markup = `
+      <h4 class="loader__message">Loading...</h4>
+      <span class="loader"></span>
+    `;
+        this.clear();
+        document.querySelector(".page__container").insertAdjacentHTML("beforeEnd", markup);
+    }
     clear() {
+        console.log("clear", this._parentElement);
         this._parentElement.innerHTML = "";
     }
 }
@@ -980,9 +992,14 @@ parcelHelpers.defineInteropFlag(exports);
 var _view = require("./View");
 var _viewDefault = parcelHelpers.interopDefault(_view);
 class PersonalInfoView extends (0, _viewDefault.default) {
-    _parentElement = "PersonalInfoView";
+    _parentElement = document.querySelector(".page__container");
     _formData;
     _isFormValid;
+    // constructor() {
+    //   super();
+    //   this._parentElement = document.querySelector("form");
+    //   console.log(this._parentElement);
+    // }
     get isFormValid() {
         return true;
     }
@@ -1161,19 +1178,23 @@ class Model {
     }
     async fetchPageData(page) {
         try {
+            await new Promise((resolve)=>{
+                setTimeout(resolve, 2000);
+            });
             switch(page){
                 case (0, _config.pageKeys).personalInfo:
                     const url = "baseUrl/personal";
-                    fetch("www.test").then((res)=>{
-                        if (!res.ok) throw new Error("errore");
-                        return res.json();
-                    }).then((data)=>data);
-                    break;
+                    const response = await fetch("www.test");
+                    if (!response.ok) throw new Error("Error fetching data");
+                    const data = await response.json();
+                    return data;
                 default:
-                    Promise.resolve();
-                    break;
+                    return null;
             }
-        } catch (error) {}
+        } catch (error) {
+            console.error("An error occurred:", error);
+            return null;
+        }
     }
     getData(key) {
         console.log(this.#state[key]);

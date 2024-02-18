@@ -11,12 +11,12 @@ import model from "./model";
 
 const goNext = async function () {
   try {
-    // TODO
     console.log(model.getData("currentPage")?.key);
     const currentPosition =
-      VIEWS_INSTANCE_MAP["SELECT_PLAN" || model.getData("currentPage")?.key];
+      VIEWS_INSTANCE_MAP[model.getData("currentPage")?.key];
+
     // validate form
-    const isFormValid = currentPosition.isFormValid;
+    const isFormValid = "mock" || currentPosition.isFormValid;
     // if invalid
     if (!isFormValid) {
       // show validation errors
@@ -50,9 +50,9 @@ const goNext = async function () {
     navigationBarView.addHandlerNavigateNext(goNext);
     navigationBarView.addHandlerNavigateBack(goBack);
     // activateStep side bar
-    sideBarView.activateStep(currentPage);
+    sideBarView.activateStep(nextPageKey);
     // update current position state
-    model.updateCurrentPosition(currentPageKey, currentIndex);
+    model.updateCurrentPosition(nextPageKey, currentIndex + 1);
   } catch (error) {
     console.error("Error navigating to next step", error);
   }
@@ -119,7 +119,6 @@ const init = function () {
     model.getData("currentPage")?.key || pageKeys.personalInfo;
   // update state with current page
   if (!model.getData("currentPage")?.key) {
-    // TODO
     model.updateState("currentPage", { key: currentPageKey, position: 0 });
   }
 

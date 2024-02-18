@@ -18,12 +18,23 @@ export default class View {
   }
 
   getFormData() {
+    return "";
     return this._parentElement.formData();
   }
 
-  renderSpinner() {}
+  renderSpinner() {
+    const markup = `
+      <h4 class="loader__message">Loading...</h4>
+      <span class="loader"></span>
+    `;
+    this.clear();
+    document
+      .querySelector(".page__container")
+      .insertAdjacentHTML("beforeEnd", markup);
+  }
 
   clear() {
+    console.log("clear", this._parentElement);
     this._parentElement.innerHTML = "";
   }
 }

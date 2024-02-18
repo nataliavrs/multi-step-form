@@ -38,21 +38,24 @@ class Model {
 
   async fetchPageData(page) {
     try {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 2000);
+      });
+
       switch (page) {
         case pageKeys.personalInfo:
           const url = "baseUrl/personal";
-          fetch("www.test")
-            .then((res) => {
-              if (!res.ok) throw new Error("errore");
-              return res.json();
-            })
-            .then((data) => data);
-          break;
+          const response = await fetch("www.test");
+          if (!response.ok) throw new Error("Error fetching data");
+          const data = await response.json();
+          return data;
         default:
-          Promise.resolve();
-          break;
+          return null;
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error("An error occurred:", error);
+      return null;
+    }
   }
 
   getData(key) {

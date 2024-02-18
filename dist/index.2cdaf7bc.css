@@ -59,6 +59,7 @@ body {
 
 .page__container {
   flex-grow: 1;
+  height: 100%;
 }
 
 .navigation__bar {
@@ -67,11 +68,38 @@ body {
 }
 
 .navigation__bar > button {
+  cursor: pointer;
   color: #fff;
   background-color: #02295a;
   border: none;
   border-radius: .5rem;
   padding: .6rem 1.2rem;
+}
+
+.loader {
+  border-radius: 50%;
+  align-self: center;
+  width: 48px;
+  height: 48px;
+  margin: 10px;
+  animation: 1s ease-in-out infinite alternate skLinRotate;
+  display: block;
+  position: relative;
+}
+
+.loader:after {
+  content: "";
+  border: 5px solid #0000;
+  border-top-color: #473dff;
+  border-radius: 50%;
+  position: absolute;
+  inset: 5px;
+}
+
+@keyframes skLinRotate {
+  95%, 100% {
+    transform: rotate(840deg);
+  }
 }
 
 form {

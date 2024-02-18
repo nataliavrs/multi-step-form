@@ -1,9 +1,15 @@
 import View from "./View";
 
 class PersonalInfoView extends View {
-  _parentElement = "PersonalInfoView";
+  _parentElement = document.querySelector(".page__container");
   _formData;
   _isFormValid;
+
+  // constructor() {
+  //   super();
+  //   this._parentElement = document.querySelector("form");
+  //   console.log(this._parentElement);
+  // }
 
   get isFormValid() {
     return true || this._isFormValid;

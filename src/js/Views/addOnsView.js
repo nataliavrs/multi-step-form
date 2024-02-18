@@ -10,6 +10,13 @@ class AddOnsView extends View {
 
     return "formdata";
   }
+
+  addHandlerJumpToPage(handler) {
+    // const addOn = document.querySelector(".add-on-change");
+    // addOn.addEventListener("click", function (e) {
+    //   handler();
+    // });
+  }
 }
 
 export default new AddOnsView();
