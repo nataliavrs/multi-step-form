@@ -29,18 +29,54 @@ body {
 
 .side__bar {
   background-image: url("data:image/svg+xml;charset=utf-8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"274\" height=\"568\" fill=\"none\" viewBox=\"0 0 274 568\"><rect width=\"274\" height=\"568\" fill=\"%23483EFF\" rx=\"10\"/><mask id=\"a\" width=\"274\" height=\"568\" x=\"0\" y=\"0\" maskUnits=\"userSpaceOnUse\" style=\"mask-type:alpha\"><rect width=\"274\" height=\"568\" fill=\"%23fff\" rx=\"10\"/></mask><g mask=\"url(%23a)\"><path fill=\"%236259FF\" fill-rule=\"evenodd\" d=\"M-34.692 543.101C3.247 632.538 168.767 685.017 211.96 612.52c43.194-72.497-66.099-85.653-104.735-160.569-38.635-74.916-68.657-121.674-124.482-104.607-55.824 17.068-55.375 106.32-17.436 195.757Z\" clip-rule=\"evenodd\"/><path fill=\"%23F9818E\" fill-rule=\"evenodd\" d=\"M233.095 601.153c60.679-28.278 92.839-143.526 41.875-171.528-50.965-28.003-57.397 47.579-108.059 75.987-50.662 28.408-82.14 50.207-69.044 88.241 13.096 38.034 74.549 35.578 135.228 7.3Z\" clip-rule=\"evenodd\"/><path stroke=\"%23fff\" stroke-linecap=\"round\" stroke-linejoin=\"bevel\" stroke-width=\"5\" d=\"m165.305 469.097 10.607-10.806M209.461 474.581l-12.506-10.503M187.56 488.991l-6.908 14.798\"/><path fill=\"%23FFAF7E\" d=\"M.305 546.891c37.003 0 67-29.997 67-67s-29.997-67-67-67-67 29.997-67 67 29.997 67 67 67Z\"/></g></svg>");
+  border-radius: .3rem;
+  padding: 1rem;
 }
 
-.side__bar--step, h1, p {
-  border: 1px solid green;
+.side__bar--step {
+  color: #fff;
+  margin: 1rem 0;
 }
 
-.page-title, form {
-  border: 1px solid #ff0;
+.position-name {
+  display: block;
+}
+
+.position-circle {
+  text-align: center;
+  border: 1px solid #fff;
+  border-radius: 1rem;
+  width: 20px;
+  height: 20px;
+}
+
+.page__navigation__container {
+  flex-direction: column;
+  padding: 0 2rem;
+  display: flex;
+}
+
+.page__container {
+  flex-grow: 1;
 }
 
 .navigation__bar {
-  border: 1px solid #00f;
+  justify-content: space-between;
+  display: flex;
+}
+
+.navigation__bar > button {
+  color: #fff;
+  background-color: #02295a;
+  border: none;
+  border-radius: .5rem;
+  padding: .6rem 1.2rem;
+}
+
+form {
+  flex-direction: column;
+  margin: 2rem 0;
+  display: flex;
 }
 
 .hide {
@@ -49,7 +85,7 @@ body {
 
 .active {
   color: #000;
-  background-color: pink;
+  background-color: #fff;
 }
 
 /*# sourceMappingURL=index.2cdaf7bc.css.map */

@@ -31,7 +31,7 @@ class SideBarView extends View {
     return pages
       .map((page, index) => {
         const position = index + 1;
-        return `<div class="side__bar--step" data-key="${page}">
+        return `<div class="side__bar--step" data-key="${page}">              
               <div class="position-circle">
                 <span class="position-number">${position}</span>
               </div>
