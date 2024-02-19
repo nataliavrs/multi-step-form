@@ -6,7 +6,6 @@ class AddOnsView extends View {
 
   validatedForm() {
     // this.#parentElement get form etc
-    console.log("validate personal info");
 
     return "formdata";
   }

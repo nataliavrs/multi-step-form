@@ -14,14 +14,15 @@ class SideBarView extends View {
 
   // TODO testare
   activateStep(currentPageKey) {
-    if (this._currentStep) this._currentStep.classList.remove("active");
+    if (this._currentStep)
+      this._currentStep
+        .querySelector(".position-circle")
+        .classList.remove("active");
 
     const stepsNodes = this._parentElement.querySelectorAll(".side__bar--step");
-    console.log(Array.from(stepsNodes));
     const currentStep = Array.from(stepsNodes).find((step) => {
       return step.dataset.key === currentPageKey;
     });
-    console.log(currentStep);
     this._currentStep = currentStep;
     currentStep.querySelector(".position-circle").classList.add("active");
   }

@@ -3,7 +3,7 @@
 import View from "./View";
 
 class SelectPlanView extends View {
-  #parentElement = "select__plan";
+  #parentElement = document.querySelector(".page__container");
   #data;
 
   // TODO if plan yearly there is discount

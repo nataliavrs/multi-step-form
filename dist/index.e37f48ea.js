@@ -601,7 +601,6 @@ var _model = require("./model");
 var _modelDefault = parcelHelpers.interopDefault(_model);
 const goNext = async function() {
     try {
-        console.log((0, _modelDefault.default).getData("currentPage")?.key);
         const currentPosition = VIEWS_INSTANCE_MAP[(0, _modelDefault.default).getData("currentPage")?.key];
         // validate form
         const isFormValid = "mock";
@@ -628,10 +627,11 @@ const goNext = async function() {
         // add event listeners to navigationBar
         (0, _navigationBarViewDefault.default).addHandlerNavigateNext(goNext);
         (0, _navigationBarViewDefault.default).addHandlerNavigateBack(goBack);
-        // activateStep side bar
-        (0, _sideBarViewDefault.default).activateStep(nextPageKey);
         // update current position state
         (0, _modelDefault.default).updateCurrentPosition(nextPageKey, currentIndex + 1);
+        // activateStep side bar
+        if (nextPageKey === (0, _config.pageKeys).thankYou) return;
+        else (0, _sideBarViewDefault.default).activateStep(nextPageKey);
     } catch (error) {
         console.error("Error navigating to next step", error);
     }
@@ -728,7 +728,6 @@ class AddOnsView extends (0, _viewDefault.default) {
     #data;
     validatedForm() {
         // this.#parentElement get form etc
-        console.log("validate personal info");
         return "formdata";
     }
     addHandlerJumpToPage(handler) {
@@ -766,8 +765,10 @@ class View {
       <h4 class="loader__message">Loading...</h4>
       <span class="loader"></span>
     `;
-        this.clear();
-        document.querySelector(".page__container").insertAdjacentHTML("beforeEnd", markup);
+        // this.clear();
+        const pageContainer = document.querySelector(".page__container");
+        pageContainer.innerHTML = "";
+        pageContainer.insertAdjacentHTML("beforeEnd", markup);
     }
     clear() {
         console.log("clear", this._parentElement);
@@ -995,11 +996,6 @@ class PersonalInfoView extends (0, _viewDefault.default) {
     _parentElement = document.querySelector(".page__container");
     _formData;
     _isFormValid;
-    // constructor() {
-    //   super();
-    //   this._parentElement = document.querySelector("form");
-    //   console.log(this._parentElement);
-    // }
     get isFormValid() {
         return true;
     }
@@ -1010,7 +1006,6 @@ class PersonalInfoView extends (0, _viewDefault.default) {
     }
     validateForm() {
         // this.#parentElement get form etc
-        console.log("PersonalInfoView");
         this._isFormValid = "PersonalInfoView";
         this._formData = "";
     // return "";
@@ -1030,7 +1025,7 @@ parcelHelpers.defineInteropFlag(exports);
 var _view = require("./View");
 var _viewDefault = parcelHelpers.interopDefault(_view);
 class SelectPlanView extends (0, _viewDefault.default) {
-    #parentElement = "select__plan";
+    #parentElement = document.querySelector(".page__container");
     #data;
     // TODO if plan yearly there is discount
     addHandlerSelectPlan(handler) {
@@ -1059,13 +1054,11 @@ class SideBarView extends (0, _viewDefault.default) {
     }
     // TODO testare
     activateStep(currentPageKey) {
-        if (this._currentStep) this._currentStep.classList.remove("active");
+        if (this._currentStep) this._currentStep.querySelector(".position-circle").classList.remove("active");
         const stepsNodes = this._parentElement.querySelectorAll(".side__bar--step");
-        console.log(Array.from(stepsNodes));
         const currentStep = Array.from(stepsNodes).find((step)=>{
             return step.dataset.key === currentPageKey;
         });
-        console.log(currentStep);
         this._currentStep = currentStep;
         currentStep.querySelector(".position-circle").classList.add("active");
     }
@@ -1179,7 +1172,7 @@ class Model {
     async fetchPageData(page) {
         try {
             await new Promise((resolve)=>{
-                setTimeout(resolve, 2000);
+                setTimeout(resolve, 500);
             });
             switch(page){
                 case (0, _config.pageKeys).personalInfo:
@@ -1197,7 +1190,6 @@ class Model {
         }
     }
     getData(key) {
-        console.log(this.#state[key]);
         return this.#state[key];
     }
     updateState(key, data) {

@@ -39,7 +39,7 @@ class Model {
   async fetchPageData(page) {
     try {
       await new Promise((resolve) => {
-        setTimeout(resolve, 2000);
+        setTimeout(resolve, 500);
       });
 
       switch (page) {
@@ -59,7 +59,6 @@ class Model {
   }
 
   getData(key) {
-    console.log(this.#state[key]);
     return this.#state[key];
   }
 

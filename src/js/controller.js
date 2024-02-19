@@ -11,7 +11,6 @@ import model from "./model";
 
 const goNext = async function () {
   try {
-    console.log(model.getData("currentPage")?.key);
     const currentPosition =
       VIEWS_INSTANCE_MAP[model.getData("currentPage")?.key];
 
@@ -49,10 +48,14 @@ const goNext = async function () {
     // add event listeners to navigationBar
     navigationBarView.addHandlerNavigateNext(goNext);
     navigationBarView.addHandlerNavigateBack(goBack);
-    // activateStep side bar
-    sideBarView.activateStep(nextPageKey);
     // update current position state
     model.updateCurrentPosition(nextPageKey, currentIndex + 1);
+    // activateStep side bar
+    if (nextPageKey === pageKeys.thankYou) {
+      return;
+    } else {
+      sideBarView.activateStep(nextPageKey);
+    }
   } catch (error) {
     console.error("Error navigating to next step", error);
   }

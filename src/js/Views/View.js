@@ -27,10 +27,10 @@ export default class View {
       <h4 class="loader__message">Loading...</h4>
       <span class="loader"></span>
     `;
-    this.clear();
-    document
-      .querySelector(".page__container")
-      .insertAdjacentHTML("beforeEnd", markup);
+    // this.clear();
+    const pageContainer = document.querySelector(".page__container");
+    pageContainer.innerHTML = "";
+    pageContainer.insertAdjacentHTML("beforeEnd", markup);
   }
 
   clear() {
