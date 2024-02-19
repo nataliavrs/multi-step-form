@@ -632,6 +632,7 @@ const goNext = async function() {
         // activateStep side bar
         if (nextPageKey === (0, _config.pageKeys).thankYou) return;
         else (0, _sideBarViewDefault.default).activateStep(nextPageKey);
+        console.log("next position", (0, _modelDefault.default).getData("currentPage").position);
     } catch (error) {
         console.error("Error navigating to next step", error);
     }
@@ -667,6 +668,7 @@ const goBack = async function() {
     // update current position state
     const previousIndex = (0, _modelDefault.default).getData("currentPage").position - 1;
     (0, _modelDefault.default).updateCurrentPosition(previousPageKey, previousIndex);
+    console.log("back position", (0, _modelDefault.default).getData("currentPage").position);
 };
 const jumpToPreviousPage = async function(pageKey) {
     // fetch page data
@@ -743,15 +745,10 @@ exports.default = new AddOnsView();
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 class View {
-    #data;
     render(page, data) {
-        this.#data = data;
         const markup = this.generateMarkup(page, data);
         this.clear();
         this._parentElement.insertAdjacentHTML("afterbegin", markup);
-    }
-    update(page) {
-    // update side bar
     }
     isFormValid() {
         this.validateForm();
@@ -765,13 +762,11 @@ class View {
       <h4 class="loader__message">Loading...</h4>
       <span class="loader"></span>
     `;
-        // this.clear();
         const pageContainer = document.querySelector(".page__container");
         pageContainer.innerHTML = "";
         pageContainer.insertAdjacentHTML("beforeEnd", markup);
     }
     clear() {
-        console.log("clear", this._parentElement);
         this._parentElement.innerHTML = "";
     }
 }

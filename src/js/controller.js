@@ -56,6 +56,7 @@ const goNext = async function () {
     } else {
       sideBarView.activateStep(nextPageKey);
     }
+    console.log("next position", model.getData("currentPage").position);
   } catch (error) {
     console.error("Error navigating to next step", error);
   }
@@ -93,6 +94,7 @@ const goBack = async function () {
   // update current position state
   const previousIndex = model.getData("currentPage").position - 1;
   model.updateCurrentPosition(previousPageKey, previousIndex);
+  console.log("back position", model.getData("currentPage").position);
 };
 
 const jumpToPreviousPage = async function (pageKey) {
