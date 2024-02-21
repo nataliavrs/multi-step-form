@@ -9,6 +9,7 @@ class PageView extends View {
 
   PAGE_LAYOUT_MAP = {
     PERSONAL_INFO: (data) => {
+      console.log("data received viw", data);
       return `
         <div class="page__title">
           <h1>Personal info</h1>

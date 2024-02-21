@@ -13,6 +13,7 @@ const goNext = async function () {
   try {
     const currentPosition =
       VIEWS_INSTANCE_MAP[model.getData("currentPage")?.key];
+    const currentPageKey = model.getData("currentPage")?.key;
 
     // validate form
     const isFormValid = "mock" || currentPosition.isFormValid;
@@ -25,10 +26,7 @@ const goNext = async function () {
     // if valid
     // save data state
     const currentFormData = currentPosition.getFormData();
-    model.updatePage(
-      currentFormData,
-      pageKeys[model.getData("currentPage").key]
-    );
+    model.updatePage(currentPageKey, currentFormData);
     // loading spinner
     currentPosition.renderSpinner();
     // get next step
@@ -76,13 +74,13 @@ const goBack = async function () {
   const previousPageKey = allPagesKeys[currentPagePosition - 1];
   // loading spinner
   VIEWS_INSTANCE_MAP[previousPageKey].renderSpinner();
-  // fetch next page data
-  const previousPageData = await model.fetchPageData(previousPageKey);
+  // // fetch next page data
+  // const previousPageData = await model.fetchPageData(previousPageKey);
   // get data of previous page
   const previousPageFormData = model.getPageData(previousPageKey);
   // render UI with data
   pageView.render(previousPageKey, {
-    ...previousPageData,
+    // ...previousPageData,
     ...previousPageFormData,
   });
   // manage navigationBar

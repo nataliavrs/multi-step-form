@@ -602,6 +602,7 @@ var _modelDefault = parcelHelpers.interopDefault(_model);
 const goNext = async function() {
     try {
         const currentPosition = VIEWS_INSTANCE_MAP[(0, _modelDefault.default).getData("currentPage")?.key];
+        const currentPageKey = (0, _modelDefault.default).getData("currentPage")?.key;
         // validate form
         const isFormValid = "mock";
         // if invalid
@@ -610,7 +611,7 @@ const goNext = async function() {
         // if valid
         // save data state
         const currentFormData = currentPosition.getFormData();
-        (0, _modelDefault.default).updatePage(currentFormData, (0, _config.pageKeys)[(0, _modelDefault.default).getData("currentPage").key]);
+        (0, _modelDefault.default).updatePage(currentPageKey, currentFormData);
         // loading spinner
         currentPosition.renderSpinner();
         // get next step
@@ -650,13 +651,13 @@ const goBack = async function() {
     const previousPageKey = allPagesKeys[currentPagePosition - 1];
     // loading spinner
     VIEWS_INSTANCE_MAP[previousPageKey].renderSpinner();
-    // fetch next page data
-    const previousPageData = await (0, _modelDefault.default).fetchPageData(previousPageKey);
+    // // fetch next page data
+    // const previousPageData = await model.fetchPageData(previousPageKey);
     // get data of previous page
     const previousPageFormData = (0, _modelDefault.default).getPageData(previousPageKey);
     // render UI with data
     (0, _pageViewDefault.default).render(previousPageKey, {
-        ...previousPageData,
+        // ...previousPageData,
         ...previousPageFormData
     });
     // manage navigationBar
@@ -748,12 +749,8 @@ class View {
         this.clear();
         this._parentElement.insertAdjacentHTML("afterbegin", markup);
     }
-    isFormValid() {
-        this.validateForm();
-        return this._parentElement.isFormValid();
-    }
     getFormData() {
-        return "";
+        return this._parentElement.getFormData();
     }
     renderSpinner() {
         const markup = `
@@ -858,6 +855,7 @@ class PageView extends (0, _viewDefault.default) {
     }
     PAGE_LAYOUT_MAP = {
         PERSONAL_INFO: (data)=>{
+            console.log("data received viw", data);
             return `
         <div class="page__title">
           <h1>Personal info</h1>
@@ -990,18 +988,25 @@ class PersonalInfoView extends (0, _viewDefault.default) {
     _formData;
     _isFormValid;
     get isFormValid() {
+        this._validateForm();
         return true;
     }
-    get formData() {
+    getFormData() {
         const form = document.getElementById("form");
-        console.log(form.elements);
-        return this._formData;
+        const formElementsNodes = form.querySelectorAll("input");
+        const formData = Array.from(formElementsNodes).reduce((acc, { name, value })=>{
+            acc[name] = value;
+            return acc;
+        }, {});
+        console.log(formData);
+        return formData;
     }
-    validateForm() {
+    _validateForm() {
         // this.#parentElement get form etc
         this._isFormValid = "PersonalInfoView";
         this._formData = "";
-    // return "";
+        this.formData;
+    // return ;
     }
     validateOnValueChange(input) {
         input.addEventListener("input", (e)=>{
@@ -1160,6 +1165,7 @@ class Model {
         localStorage.setItem("pages", JSON.stringify(this.state.pages));
     }
     getPageData(page) {
+        console.log("getpagedata", this.#state.pages[page]);
         return this.#state.pages[page];
     }
     async fetchPageData(page) {
@@ -1189,7 +1195,8 @@ class Model {
         this.#state.currentPage.position = position;
         this.#state.currentPage.key = key;
     }
-    updatePage(data, page) {
+    updatePage(page, data) {
+        console.log("update page", page, data);
         this.#state.pages[page] = data;
     }
     updateStateWithStoredData(pages) {

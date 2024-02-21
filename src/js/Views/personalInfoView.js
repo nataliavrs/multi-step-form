@@ -6,20 +6,30 @@ class PersonalInfoView extends View {
   _isFormValid;
 
   get isFormValid() {
+    this._validateForm();
     return true || this._isFormValid;
   }
 
-  get formData() {
+  getFormData() {
     const form = document.getElementById("form");
-    console.log(form.elements);
-    return this._formData;
+    const formElementsNodes = form.querySelectorAll("input");
+    const formData = Array.from(formElementsNodes).reduce(
+      (acc, { name, value }) => {
+        acc[name] = value;
+        return acc;
+      },
+      {}
+    );
+    console.log(formData);
+    return formData;
   }
 
-  validateForm() {
+  _validateForm() {
     // this.#parentElement get form etc
     this._isFormValid = "PersonalInfoView";
     this._formData = "";
-    // return "";
+    this.formData;
+    // return ;
   }
 
   validateOnValueChange(input) {

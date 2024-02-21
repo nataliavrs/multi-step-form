@@ -33,6 +33,7 @@ class Model {
   }
 
   getPageData(page) {
+    console.log("getpagedata", this.#state.pages[page]);
     return this.#state.pages[page];
   }
 
@@ -73,7 +74,8 @@ class Model {
     this.#state.currentPage.key = key;
   }
 
-  updatePage(data, page) {
+  updatePage(page, data) {
+    console.log("update page", page, data);
     this.#state.pages[page] = data;
   }
 

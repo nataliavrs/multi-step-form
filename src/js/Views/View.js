@@ -1,19 +1,12 @@
 export default class View {
-
   render(page, data) {
     const markup = this.generateMarkup(page, data);
     this.clear();
     this._parentElement.insertAdjacentHTML("afterbegin", markup);
   }
 
-  isFormValid() {
-    this.validateForm();
-    return this._parentElement.isFormValid();
-  }
-
   getFormData() {
-    return "";
-    return this._parentElement.formData();
+    return this._parentElement.getFormData();
   }
 
   renderSpinner() {
