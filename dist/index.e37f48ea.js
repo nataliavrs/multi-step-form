@@ -624,9 +624,6 @@ const goNext = async function() {
         if (nextPageKey === (0, _config.pageKeys).summary) (0, _addOnsViewDefault.default).addHandlerJumpToPage(jumpToPreviousPage);
         // manage navigationBar
         manageNavigationBar(nextPageKey);
-        // add event listeners to navigationBar
-        (0, _navigationBarViewDefault.default).addHandlerNavigateNext(goNext);
-        (0, _navigationBarViewDefault.default).addHandlerNavigateBack(goBack);
         // update current position state
         (0, _modelDefault.default).updateCurrentPosition(nextPageKey, currentIndex + 1);
         // activateStep side bar
@@ -647,6 +644,7 @@ const manageNavigationBar = function(pageKey) {
 const goBack = async function() {
     // find current page
     const currentPagePosition = (0, _modelDefault.default).getData("currentPage")?.position;
+    console.log("currentPagePosition", currentPagePosition);
     // get previous page
     const allPagesKeys = Object.values((0, _config.pageKeys));
     const previousPageKey = allPagesKeys[currentPagePosition - 1];
@@ -1169,16 +1167,8 @@ class Model {
             await new Promise((resolve)=>{
                 setTimeout(resolve, 500);
             });
-            switch(page){
-                case (0, _config.pageKeys).personalInfo:
-                    const url = "baseUrl/personal";
-                    const response = await fetch("www.test");
-                    if (!response.ok) throw new Error("Error fetching data");
-                    const data = await response.json();
-                    return data;
-                default:
-                    return null;
-            }
+            page;
+            return null;
         } catch (error) {
             console.error("An error occurred:", error);
             return null;

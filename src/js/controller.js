@@ -45,9 +45,6 @@ const goNext = async function () {
     }
     // manage navigationBar
     manageNavigationBar(nextPageKey);
-    // add event listeners to navigationBar
-    navigationBarView.addHandlerNavigateNext(goNext);
-    navigationBarView.addHandlerNavigateBack(goBack);
     // update current position state
     model.updateCurrentPosition(nextPageKey, currentIndex + 1);
     // activateStep side bar
@@ -73,6 +70,7 @@ const manageNavigationBar = function (pageKey) {
 const goBack = async function () {
   // find current page
   const currentPagePosition = model.getData("currentPage")?.position;
+  console.log("currentPagePosition", currentPagePosition);
   // get previous page
   const allPagesKeys = Object.values(pageKeys);
   const previousPageKey = allPagesKeys[currentPagePosition - 1];

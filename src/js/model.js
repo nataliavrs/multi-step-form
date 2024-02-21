@@ -43,12 +43,12 @@ class Model {
       });
 
       switch (page) {
-        case pageKeys.personalInfo:
-          const url = "baseUrl/personal";
-          const response = await fetch("www.test");
-          if (!response.ok) throw new Error("Error fetching data");
-          const data = await response.json();
-          return data;
+        // case pageKeys.personalInfo:
+        //   const url = "baseUrl/personal";
+        //   const response = await fetch("www.test");
+        //   if (!response.ok) throw new Error("Error fetching data");
+        //   const data = await response.json();
+        //   return data;
         default:
           return null;
       }
