@@ -28,8 +28,14 @@ class Model {
     return this.#state;
   }
 
+  // TODO
   #storeState() {
-    localStorage.setItem("pages", JSON.stringify(this.state.pages));
+    if (!localStorage.getItem("pages")) return;
+    const previousPages = JSON.parse(localStorage.getItem("pages"));
+    localStorage.setItem(
+      "pages",
+      JSON.stringify(...previousPages, ...this.#state.pages)
+    );
   }
 
   getPageData(page) {
