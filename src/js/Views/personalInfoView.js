@@ -10,20 +10,6 @@ class PersonalInfoView extends View {
     return true || this._isFormValid;
   }
 
-  getFormData() {
-    const form = document.getElementById("form");
-    const formElementsNodes = form.querySelectorAll("input");
-    const formData = Array.from(formElementsNodes).reduce(
-      (acc, { name, value }) => {
-        acc[name] = value;
-        return acc;
-      },
-      {}
-    );
-    console.log(formData);
-    return formData;
-  }
-
   _validateForm() {
     // this.#parentElement get form etc
     this._isFormValid = "PersonalInfoView";

@@ -35,8 +35,9 @@ const goNext = async function () {
     const nextPageKey = allPagesKeys[currentIndex + 1];
     // fetch next page data
     const nextPageData = await model.fetchPageData(nextPageKey);
+    const nextPageStoredData = model.getPageData(nextPageKey);
     // render new page with data
-    pageView.render(nextPageKey, nextPageData);
+    pageView.render(nextPageKey, { ...nextPageData, ...nextPageStoredData });
 
     if (nextPageKey === pageKeys.summary) {
       addOnsView.addHandlerJumpToPage(jumpToPreviousPage);

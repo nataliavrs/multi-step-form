@@ -6,7 +6,21 @@ export default class View {
   }
 
   getFormData() {
-    return this._parentElement.getFormData();
+    const form = document.getElementById("form");
+    const formElementsNodes = form.querySelectorAll("input");
+    const formData = Array.from(formElementsNodes).reduce(
+      (acc, { name, value, checked, type }) => {
+        if (type === "radio") {
+          if (checked) acc[name] = value;
+        } else {
+          acc[name] = value;
+        }
+        return acc;
+      },
+      {}
+    );
+    console.log(formData);
+    return formData;
   }
 
   renderSpinner() {

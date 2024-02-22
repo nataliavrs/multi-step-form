@@ -620,8 +620,12 @@ const goNext = async function() {
         const nextPageKey = allPagesKeys[currentIndex + 1];
         // fetch next page data
         const nextPageData = await (0, _modelDefault.default).fetchPageData(nextPageKey);
+        const nextPageStoredData = (0, _modelDefault.default).getPageData(nextPageKey);
         // render new page with data
-        (0, _pageViewDefault.default).render(nextPageKey, nextPageData);
+        (0, _pageViewDefault.default).render(nextPageKey, {
+            ...nextPageData,
+            ...nextPageStoredData
+        });
         if (nextPageKey === (0, _config.pageKeys).summary) (0, _addOnsViewDefault.default).addHandlerJumpToPage(jumpToPreviousPage);
         // manage navigationBar
         manageNavigationBar(nextPageKey);
@@ -750,7 +754,16 @@ class View {
         this._parentElement.insertAdjacentHTML("afterbegin", markup);
     }
     getFormData() {
-        return this._parentElement.getFormData();
+        const form = document.getElementById("form");
+        const formElementsNodes = form.querySelectorAll("input");
+        const formData = Array.from(formElementsNodes).reduce((acc, { name, value, checked, type })=>{
+            if (type === "radio") {
+                if (checked) acc[name] = value;
+            } else acc[name] = value;
+            return acc;
+        }, {});
+        console.log(formData);
+        return formData;
     }
     renderSpinner() {
         const markup = `
@@ -855,7 +868,6 @@ class PageView extends (0, _viewDefault.default) {
     }
     PAGE_LAYOUT_MAP = {
         PERSONAL_INFO: (data)=>{
-            console.log("data received viw", data);
             return `
         <div class="page__title">
           <h1>Personal info</h1>
@@ -871,37 +883,36 @@ class PageView extends (0, _viewDefault.default) {
         </form>`;
         },
         SELECT_PLAN: (data)=>{
+            console.log("select_plan", data);
             return `
         <div class="page__title">
           <h1>Select your plan</h1>
           <p>You have the option of monthly or yearly billing.</p>
         </div>
         <form id="form">
-          <div class="input__container">
-            <label>90\u{20AC}</label>
-            <input type="button" class="arcade-btn" value="Arcade">
+          <div class="input__container">            
+            <input type="radio" name="subscription" ${data?.subscription === "arcade" ? "checked" : ""} id="arcade" class="arcade-btn" value="arcade">
+            <label for="arcade">Arcade</label>
+            <label>9\u{20AC}/mo</label>
             <label>2 months free</label>
           </div>
-          <div class="input__container">
-            <label>90\u{20AC}</label>
-            <input type="button" class="arcade-btn" value="Arcade">
-            <label>2 months free</label>
+          <div class="input__container">            
+              <input type="radio" name="subscription" ${data?.subscription === "advanced" ? "checked" : ""} id="advanced" class="advanced-btn" value="advanced">
+              <label for="advanced">Advanced</label>
+              <label>12\u{20AC}/mo</label>
+              <label>2 months free</label>
           </div>
           <div class="input__container">
-            <label>90\u{20AC}</label>
-            <input type="button" class="arcade-btn" value="Arcade">
-            <label>2 months free</label>
-          </div>
-          <div class="input__container">
-            <label>90\u{20AC}</label>
-            <input type="button" class="arcade-btn" value="Arcade">
-            <label>2 months free</label>
+              <input type="radio" name="subscription" ${data?.subscription === "pro" ? "checked" : ""} id="pro" class="pro-btn" value="pro">
+              <label for="pro">Pro</label>
+              <label>15\u{20AC}/mo</label>
+              <label>2 months free</label>
           </div>
           <div class="radios__container">
             <label for="monthly">Monthly</label>
-            <input type="radio" name="recurrence" value="monthly">
+            <input type="radio" name="recurrence" ${data?.recurrence === "monthly" ? "checked" : ""} value="monthly">
             <label for="yearly">Yearly</label>
-            <input type="radio" name="recurrence" value="yearly">
+            <input type="radio" name="recurrence" ${data?.recurrence === "yearly" ? "checked" : ""} value="yearly">
           </div>
         </form>
       `;
@@ -990,16 +1001,6 @@ class PersonalInfoView extends (0, _viewDefault.default) {
     get isFormValid() {
         this._validateForm();
         return true;
-    }
-    getFormData() {
-        const form = document.getElementById("form");
-        const formElementsNodes = form.querySelectorAll("input");
-        const formData = Array.from(formElementsNodes).reduce((acc, { name, value })=>{
-            acc[name] = value;
-            return acc;
-        }, {});
-        console.log(formData);
-        return formData;
     }
     _validateForm() {
         // this.#parentElement get form etc
