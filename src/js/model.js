@@ -24,18 +24,16 @@ class Model {
     },
   };
 
-  get state() {
-    return this.#state;
-  }
-
-  // TODO
   #storeState() {
-    if (!localStorage.getItem("pages")) return;
-    const previousPages = JSON.parse(localStorage.getItem("pages"));
-    localStorage.setItem(
-      "pages",
-      JSON.stringify(...previousPages, ...this.#state.pages)
-    );
+    if (!localStorage.getItem("pages")) {
+      localStorage.setItem("pages", JSON.stringify(this.#state.pages));
+    } else {
+      const previousPages = JSON.parse(localStorage.getItem("pages"));
+      localStorage.setItem(
+        "pages",
+        JSON.stringify({ ...previousPages, ...this.#state.pages })
+      );
+    }
   }
 
   getPageData(page) {
@@ -83,17 +81,12 @@ class Model {
   updatePage(page, data) {
     console.log("update page", page, data);
     this.#state.pages[page] = data;
+    this.#storeState();
   }
 
   updateStateWithStoredData(pages) {
     this.#state = {
-      ...this.#state,
-      page1: {
-        ...pages[1],
-      },
-      page2: {
-        ...pages[2],
-      },
+      pages: { ...JSON.parse(pages) },
     };
   }
 }
