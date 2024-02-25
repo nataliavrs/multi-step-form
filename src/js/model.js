@@ -13,7 +13,9 @@ class Model {
         recurrence: "",
       },
       ADD_ONS: {
-        addOn: "",
+        onlineService: false,
+        largerStorage: false,
+        customizableProfile: false,
       },
       SUMMARY: {},
       THANK_YOU: {},

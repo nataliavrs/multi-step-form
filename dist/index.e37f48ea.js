@@ -755,11 +755,13 @@ class View {
     }
     getFormData() {
         const form = document.getElementById("form");
+        if (!form) return;
         const formElementsNodes = form.querySelectorAll("input");
         const formData = Array.from(formElementsNodes).reduce((acc, { name, value, checked, type })=>{
             if (type === "radio") {
                 if (checked) acc[name] = value;
-            } else acc[name] = value;
+            } else if (type === "checkbox") acc[name] = !!checked;
+            else acc[name] = value;
             return acc;
         }, {});
         console.log(formData);
@@ -925,21 +927,28 @@ class PageView extends (0, _viewDefault.default) {
         </div>
         <form id="form">
           <div class="input__container">
-            <label for="online-service">Online service</label>
+            <label for="onlineService">Online service</label>
             <p>Access to multiplayer games</p>
-            <input type="checkbox" id="online-service" class="addon-checkbox" value="onlineService" />
+
+            <input type="checkbox" ${data?.onlineService ? "checked" : ""} id="onlineService" name="onlineService" class="addon-checkbox" value="onlineService" />
+
+
             <span class="value">+1\u{20AC}/mo</span>
           </div>
           <div class="input__container">
-            <label for="larger-storage">Larger storage</label>
+            <label for="largerStorage">Larger storage</label>
             <p>Extra 1TB of cloud save</p>
-            <input type="checkbox" id="larger-storage" class="addon-checkbox" value="largerStorage" />
+
+            <input type="checkbox" ${data?.largerStorage ? "checked" : ""} id="largerStorage" name="largerStorage" class="addon-checkbox" value="largerStorage" />
+
             <span class="value">+1\u{20AC}/mo</span>
           </div>
           <div class="input__container">
-            <label for="customizable-profile">Customizable profile</label>
+            <label for="customizableService">Customizable profile</label>
             <p>Custom theme on your profile</p>
-            <input type="checkbox" id="customizable-profile" class="addon-checkbox" value="customizableProfile" />
+
+            <input type="checkbox" ${data?.customizableService ? "checked" : ""} id="customizableService" name="customizableService" class="addon-checkbox" value="customizableService" />
+
             <span class="value">+1\u{20AC}/mo</span>
           </div>
         </form>
@@ -1149,7 +1158,9 @@ class Model {
                 recurrence: ""
             },
             ADD_ONS: {
-                addOn: ""
+                onlineService: false,
+                largerStorage: false,
+                customizableProfile: false
             },
             SUMMARY: {},
             THANK_YOU: {}

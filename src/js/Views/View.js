@@ -7,11 +7,14 @@ export default class View {
 
   getFormData() {
     const form = document.getElementById("form");
+    if (!form) return;
     const formElementsNodes = form.querySelectorAll("input");
     const formData = Array.from(formElementsNodes).reduce(
       (acc, { name, value, checked, type }) => {
         if (type === "radio") {
           if (checked) acc[name] = value;
+        } else if (type === "checkbox") {
+          acc[name] = !!checked;
         } else {
           acc[name] = value;
         }
