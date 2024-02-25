@@ -764,7 +764,6 @@ class View {
             else acc[name] = value;
             return acc;
         }, {});
-        console.log(formData);
         return formData;
     }
     renderSpinner() {
@@ -885,7 +884,6 @@ class PageView extends (0, _viewDefault.default) {
         </form>`;
         },
         SELECT_PLAN: (data)=>{
-            console.log("select_plan", data);
             return `
         <div class="page__title">
           <h1>Select your plan</h1>
@@ -898,18 +896,21 @@ class PageView extends (0, _viewDefault.default) {
             <label>9\u{20AC}/mo</label>
             <label>2 months free</label>
           </div>
+
           <div class="input__container">            
               <input type="radio" name="subscription" ${data?.subscription === "advanced" ? "checked" : ""} id="advanced" class="advanced-btn" value="advanced">
               <label for="advanced">Advanced</label>
               <label>12\u{20AC}/mo</label>
               <label>2 months free</label>
           </div>
+
           <div class="input__container">
               <input type="radio" name="subscription" ${data?.subscription === "pro" ? "checked" : ""} id="pro" class="pro-btn" value="pro">
               <label for="pro">Pro</label>
               <label>15\u{20AC}/mo</label>
               <label>2 months free</label>
           </div>
+
           <div class="radios__container">
             <label for="monthly">Monthly</label>
             <input type="radio" name="recurrence" ${data?.recurrence === "monthly" ? "checked" : ""} value="monthly">
@@ -925,31 +926,27 @@ class PageView extends (0, _viewDefault.default) {
           <h1>Pick add-ons</h1>
           <p>Add-ons help enhance your gaming experience</p>
         </div>
+
         <form id="form">
           <div class="input__container">
             <label for="onlineService">Online service</label>
             <p>Access to multiplayer games</p>
-
             <input type="checkbox" ${data?.onlineService ? "checked" : ""} id="onlineService" name="onlineService" class="addon-checkbox" value="onlineService" />
-
-
             <span class="value">+1\u{20AC}/mo</span>
           </div>
+
           <div class="input__container">
             <label for="largerStorage">Larger storage</label>
             <p>Extra 1TB of cloud save</p>
-
             <input type="checkbox" ${data?.largerStorage ? "checked" : ""} id="largerStorage" name="largerStorage" class="addon-checkbox" value="largerStorage" />
-
-            <span class="value">+1\u{20AC}/mo</span>
+            <span class="value">+2\u{20AC}/mo</span>
           </div>
+
           <div class="input__container">
             <label for="customizableService">Customizable profile</label>
             <p>Custom theme on your profile</p>
-
             <input type="checkbox" ${data?.customizableService ? "checked" : ""} id="customizableService" name="customizableService" class="addon-checkbox" value="customizableService" />
-
-            <span class="value">+1\u{20AC}/mo</span>
+            <span class="value">+2\u{20AC}/mo</span>
           </div>
         </form>
       `;
@@ -983,7 +980,7 @@ class PageView extends (0, _viewDefault.default) {
         </div>
       `;
         },
-        THANK_YOU: (data)=>{
+        THANK_YOU: ()=>{
             return `
         <div class="thanks--container">
           <p>
@@ -1013,6 +1010,7 @@ class PersonalInfoView extends (0, _viewDefault.default) {
     }
     _validateForm() {
         // this.#parentElement get form etc
+        const formData = this.getFormData();
         this._isFormValid = "PersonalInfoView";
         this._formData = "";
         this.formData;
@@ -1039,7 +1037,7 @@ class SelectPlanView extends (0, _viewDefault.default) {
     addHandlerSelectPlan(handler) {
         handler(selectedPlan);
     }
-    addHandlerSelectTime(handler) {
+    addHandlerSelectRecurrence(handler) {
         handler(selectedTime);
     }
 }
@@ -1162,8 +1160,7 @@ class Model {
                 largerStorage: false,
                 customizableProfile: false
             },
-            SUMMARY: {},
-            THANK_YOU: {}
+            SUMMARY: {}
         },
         currentPage: {
             key: "",

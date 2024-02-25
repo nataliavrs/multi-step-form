@@ -18,7 +18,6 @@ class Model {
         customizableProfile: false,
       },
       SUMMARY: {},
-      THANK_YOU: {},
     },
     currentPage: {
       key: "",

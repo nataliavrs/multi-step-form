@@ -22,7 +22,6 @@ export default class View {
       },
       {}
     );
-    console.log(formData);
     return formData;
   }
 

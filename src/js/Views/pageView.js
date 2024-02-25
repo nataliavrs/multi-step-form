@@ -1,5 +1,4 @@
 import View from "./View";
-
 class PageView extends View {
   _parentElement = document.querySelector(".page__container");
 
@@ -24,7 +23,6 @@ class PageView extends View {
         </form>`;
     },
     SELECT_PLAN: (data) => {
-      console.log("select_plan", data);
       return `
         <div class="page__title">
           <h1>Select your plan</h1>
@@ -39,6 +37,7 @@ class PageView extends View {
             <label>9€/mo</label>
             <label>2 months free</label>
           </div>
+
           <div class="input__container">            
               <input type="radio" name="subscription" ${
                 data?.subscription === "advanced" ? "checked" : ""
@@ -47,6 +46,7 @@ class PageView extends View {
               <label>12€/mo</label>
               <label>2 months free</label>
           </div>
+
           <div class="input__container">
               <input type="radio" name="subscription" ${
                 data?.subscription === "pro" ? "checked" : ""
@@ -55,6 +55,7 @@ class PageView extends View {
               <label>15€/mo</label>
               <label>2 months free</label>
           </div>
+
           <div class="radios__container">
             <label for="monthly">Monthly</label>
             <input type="radio" name="recurrence" ${
@@ -74,37 +75,33 @@ class PageView extends View {
           <h1>Pick add-ons</h1>
           <p>Add-ons help enhance your gaming experience</p>
         </div>
+
         <form id="form">
           <div class="input__container">
             <label for="onlineService">Online service</label>
             <p>Access to multiplayer games</p>
-
             <input type="checkbox" ${
               data?.onlineService ? "checked" : ""
             } id="onlineService" name="onlineService" class="addon-checkbox" value="onlineService" />
-
-
             <span class="value">+1€/mo</span>
           </div>
+
           <div class="input__container">
             <label for="largerStorage">Larger storage</label>
             <p>Extra 1TB of cloud save</p>
-
             <input type="checkbox" ${
               data?.largerStorage ? "checked" : ""
             } id="largerStorage" name="largerStorage" class="addon-checkbox" value="largerStorage" />
-
-            <span class="value">+1€/mo</span>
+            <span class="value">+2€/mo</span>
           </div>
+
           <div class="input__container">
             <label for="customizableService">Customizable profile</label>
             <p>Custom theme on your profile</p>
-
             <input type="checkbox" ${
               data?.customizableService ? "checked" : ""
             } id="customizableService" name="customizableService" class="addon-checkbox" value="customizableService" />
-
-            <span class="value">+1€/mo</span>
+            <span class="value">+2€/mo</span>
           </div>
         </form>
       `;
@@ -138,7 +135,7 @@ class PageView extends View {
         </div>
       `;
     },
-    THANK_YOU: (data) => {
+    THANK_YOU: () => {
       return `
         <div class="thanks--container">
           <p>

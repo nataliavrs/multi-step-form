@@ -12,7 +12,7 @@ class SelectPlanView extends View {
     handler(selectedPlan);
   }
 
-  addHandlerSelectTime(handler) {
+  addHandlerSelectRecurrence(handler) {
     handler(selectedTime);
   }
 }

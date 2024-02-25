@@ -12,6 +12,8 @@ class PersonalInfoView extends View {
 
   _validateForm() {
     // this.#parentElement get form etc
+    const formData = this.getFormData();
+
     this._isFormValid = "PersonalInfoView";
     this._formData = "";
     this.formData;
