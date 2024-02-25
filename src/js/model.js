@@ -13,9 +13,9 @@ class Model {
         recurrence: "",
       },
       ADD_ONS: {
-        onlineService: false,
-        largerStorage: false,
-        customizableProfile: false,
+        onlineService: { active: false, price: 0 },
+        largerStorage: { active: false, price: 0 },
+        customizableProfile: { active: false, price: 0 },
       },
       SUMMARY: {},
     },
@@ -38,8 +38,14 @@ class Model {
   }
 
   getPageData(page) {
-    console.log("getpagedata", this.#state.pages[page]);
-    return this.#state.pages[page];
+    const pages = this.#state.pages;
+    if (page === pageKeys.summary) {
+      return {
+        ...pages[pageKeys.selectPlan],
+        ...pages[pageKeys.addOns],
+      };
+    }
+    return pages[page];
   }
 
   async fetchPageData(page) {

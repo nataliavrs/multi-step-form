@@ -1,1 +1,0 @@
-{"mappings":"AAAA;;;;AAIA","sources":["style.css"],"sourcesContent":[".hide {\r\n  opacity: 0;\r\n}\r\n\r\n.active {\r\n  color: #000;\r\n  background-color: pink;\r\n}\r\n"],"names":[],"version":3,"file":"index.3a01df49.css.map","sourceRoot":"/__parcel_source_root/"}

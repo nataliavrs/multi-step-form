@@ -1,4 +1,6 @@
 node_modules
+dist/
+parcel-cache
 
 # Avoid accidental upload of the Sketch and Figma design files
 #####################################################

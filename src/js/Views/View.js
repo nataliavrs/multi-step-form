@@ -14,7 +14,7 @@ export default class View {
         if (type === "radio") {
           if (checked) acc[name] = value;
         } else if (type === "checkbox") {
-          acc[name] = !!checked;
+          acc[name] = value;
         } else {
           acc[name] = value;
         }
