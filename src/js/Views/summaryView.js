@@ -17,6 +17,8 @@ class SummaryView extends View {
       await handler();
     });
   }
+
+  getPrices() {}
 }
 
 export default new SummaryView();
