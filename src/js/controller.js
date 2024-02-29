@@ -37,10 +37,14 @@ const goNext = async function () {
     const nextPageData = await model.fetchPageData(nextPageKey);
     const nextPageStoredData = model.getPageData(nextPageKey);
     // render new page with data
-    pageView.render(nextPageKey, { ...nextPageData, ...nextPageStoredData });
-
     if (nextPageKey === pageKeys.summary) {
-      addOnsView.addHandlerJumpToPage(jumpToPreviousPage);
+      summaryView.render({
+        ...nextPageData,
+        ...nextPageStoredData,
+      });
+      summaryView.addHandlerJumpToPage(jumpToPreviousPage);
+    } else {
+      pageView.render(nextPageKey, { ...nextPageData, ...nextPageStoredData });
     }
     // manage navigationBar
     manageNavigationBar(nextPageKey);
@@ -80,10 +84,17 @@ const goBack = async function () {
   // get data of previous page
   const previousPageFormData = model.getPageData(previousPageKey);
   // render UI with data
-  pageView.render(previousPageKey, {
-    // ...previousPageData,
-    ...previousPageFormData,
-  });
+  if (previousPageKey === pageKeys.summary) {
+    summaryView.render({
+      // ...previousPageData,
+      ...previousPageFormData,
+    });
+  } else {
+    pageView.render(previousPageKey, {
+      // ...previousPageData,
+      ...previousPageFormData,
+    });
+  }
   // manage navigationBar
   manageNavigationBar(previousPageKey);
   // activateStep side bar

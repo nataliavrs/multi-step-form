@@ -75,6 +75,11 @@ body {
   flex-grow: 1;
 }
 
+/* Pages */
+.summary--container {
+  margin: 1rem 0;
+}
+
 .navigation__bar {
   display: flex;
   justify-content: space-between;

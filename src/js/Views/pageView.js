@@ -106,35 +106,34 @@ class PageView extends View {
         </form>
       `;
     },
-    SUMMARY: (data) => {
-      return `
-        <div class="page__title">
-          <h1>Finishing up</h1>
-          <p>Double-check everything looks right before confirming.</p>
-        </div>
-        <div class="summary--container">
-          <div class="summary--item--container">
-            <span>Arcade (yearly)</span>
-            <span>90€</span>
-            <button type="button">Change</button>
-          </div>
-          <div class="summary--item--container">
-            <span>Online service</span>
-            <span>90€</span>
-            <button type="button">Change</button>
-          </div>
-          <div class="summary--item--container">
-            <span>Larger storage</span>
-            <span>90€</span>
-            <button type="button">Change</button>
-          </div>
-          <div class="total">
-            <span>Total (per year)</span>
-            <span>270€/yr</span>
-          </div>
-        </div>
-      `;
-    },
+    // SUMMARY: (data) => {
+    //   console.log("summary", data);
+    //   console.log("this", this);
+    //   return `
+    //     <div class="page__title">
+    //       <h1>Finishing up</h1>
+    //       <p>Double-check everything looks right before confirming.</p>
+    //     </div>
+    //     <div class="summary--container">
+    //       <div class="summary--item--container">
+    //         <span>Arcade (${
+    //           data.recurrence === "monthly" ? "(Monthly)" : "(Yearly)"
+    //         })</span>
+    //         <span>90€</span>
+    //         <button type="button">Change</button>
+    //       </div>
+    //       ${this.generateAddOns(data.addOns)}
+    //       <div class="total">
+    //         <span>Total (per ${
+    //           data.recurrence === "monthly" ? "month" : "year"
+    //         })</span>
+    //         <span>${this.getTotal()}€/${
+    //     data.recurrence === "monthly" ? "mo" : "yr"
+    //   }</span>
+    //       </div>
+    //     </div>
+    //   `;
+    // },
     THANK_YOU: () => {
       return `
         <div class="thanks--container">

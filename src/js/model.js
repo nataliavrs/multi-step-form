@@ -13,9 +13,9 @@ class Model {
         recurrence: "",
       },
       ADD_ONS: {
-        onlineService: { active: false, price: 0 },
-        largerStorage: { active: false, price: 0 },
-        customizableProfile: { active: false, price: 0 },
+        onlineService: false,
+        largerStorage: false,
+        customizableProfile: false,
       },
       SUMMARY: {},
     },
@@ -42,7 +42,7 @@ class Model {
     if (page === pageKeys.summary) {
       return {
         ...pages[pageKeys.selectPlan],
-        ...pages[pageKeys.addOns],
+        addOns: pages[pageKeys.addOns],
       };
     }
     return pages[page];
