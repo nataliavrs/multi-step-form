@@ -77,7 +77,7 @@ class Model {
   updateState(key, data) {
     this.#state = { ...this.#state, [key]: data };
     this.#storeState();
-    console.log(this.#state);
+    // console.log(this.#state);
   }
 
   updateCurrentPosition(key, position) {
@@ -86,7 +86,7 @@ class Model {
   }
 
   updatePage(page, data) {
-    console.log("update page", page, data);
+    // console.log("update page", page, data);
     this.#state.pages[page] = data;
     this.#storeState();
   }

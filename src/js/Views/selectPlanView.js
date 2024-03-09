@@ -3,17 +3,26 @@
 import View from "./View";
 
 class SelectPlanView extends View {
-  #parentElement = document.querySelector(".page__container");
-  #data;
-
-  // TODO if plan yearly there is discount
+  _parentElement = document.querySelector(".page__container");
+  _data;
 
   addHandlerSelectPlan(handler) {
     handler(selectedPlan);
   }
 
-  addHandlerSelectRecurrence(handler) {
-    handler(selectedTime);
+  addHandlerSelectRecurrence() {
+    this._parentElement
+      .querySelector("form")
+      .addEventListener("input", (event) => {
+        const target = event.target;
+        if (target.name !== "recurrence") return;
+
+        console.log(target);
+        console.log(event);
+
+        this.updatePlans(target.value);
+        this.update();
+      });
   }
 }
 

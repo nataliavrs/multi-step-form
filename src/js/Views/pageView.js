@@ -35,7 +35,11 @@ class PageView extends View {
             } id="arcade" class="arcade-btn" value="arcade">
             <label for="arcade">Arcade</label>
             <label>9€/mo</label>
-            <label>2 months free</label>
+            ${
+              data?.recurrence === "yearly"
+                ? "<label>2 months free</label>"
+                : ""
+            }  
           </div>
 
           <div class="input__container">            
@@ -44,7 +48,11 @@ class PageView extends View {
               } id="advanced" class="advanced-btn" value="advanced">
               <label for="advanced">Advanced</label>
               <label>12€/mo</label>
-              <label>2 months free</label>
+              ${
+                data?.recurrence === "yearly"
+                  ? "<label>2 months free</label>"
+                  : ""
+              }  
           </div>
 
           <div class="input__container">
@@ -53,7 +61,11 @@ class PageView extends View {
               } id="pro" class="pro-btn" value="pro">
               <label for="pro">Pro</label>
               <label>15€/mo</label>
-              <label>2 months free</label>
+              ${
+                data?.recurrence === "yearly"
+                  ? "<label>2 months free</label>"
+                  : ""
+              }              
           </div>
 
           <div class="radios__container">
@@ -106,34 +118,6 @@ class PageView extends View {
         </form>
       `;
     },
-    // SUMMARY: (data) => {
-    //   console.log("summary", data);
-    //   console.log("this", this);
-    //   return `
-    //     <div class="page__title">
-    //       <h1>Finishing up</h1>
-    //       <p>Double-check everything looks right before confirming.</p>
-    //     </div>
-    //     <div class="summary--container">
-    //       <div class="summary--item--container">
-    //         <span>Arcade (${
-    //           data.recurrence === "monthly" ? "(Monthly)" : "(Yearly)"
-    //         })</span>
-    //         <span>90€</span>
-    //         <button type="button">Change</button>
-    //       </div>
-    //       ${this.generateAddOns(data.addOns)}
-    //       <div class="total">
-    //         <span>Total (per ${
-    //           data.recurrence === "monthly" ? "month" : "year"
-    //         })</span>
-    //         <span>${this.getTotal()}€/${
-    //     data.recurrence === "monthly" ? "mo" : "yr"
-    //   }</span>
-    //       </div>
-    //     </div>
-    //   `;
-    // },
     THANK_YOU: () => {
       return `
         <div class="thanks--container">

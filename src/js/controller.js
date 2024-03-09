@@ -37,43 +37,56 @@ const goNext = async function () {
     const nextPageData = await model.fetchPageData(nextPageKey);
     const nextPageStoredData = model.getPageData(nextPageKey);
     // render new page with data
-    if (nextPageKey === pageKeys.summary) {
+    if (nextPageKey === pageKeys.SUMMARY) {
       summaryView.render({
         ...nextPageData,
         ...nextPageStoredData,
       });
-      summaryView.addHandlerJumpToPage(jumpToPreviousPage);
     } else {
       pageView.render(nextPageKey, { ...nextPageData, ...nextPageStoredData });
     }
+    // add handlers
+    addHandlers(nextPageKey);
     // manage navigationBar
     manageNavigationBar(nextPageKey);
     // update current position state
     model.updateCurrentPosition(nextPageKey, currentIndex + 1);
     // activateStep side bar
-    if (nextPageKey === pageKeys.thankYou) {
+    if (nextPageKey === pageKeys.THANK_YOU) {
       return;
     } else {
       sideBarView.activateStep(nextPageKey);
     }
-    console.log("next position", model.getData("currentPage").position);
+    // console.log("next position", model.getData("currentPage").position);
   } catch (error) {
     console.error("Error navigating to next step", error);
   }
 };
 
 const manageNavigationBar = function (pageKey) {
-  pageKey !== pageKeys.personalInfo && navigationBarView.showGoBack();
-  pageKey === pageKeys.personalInfo && navigationBarView.hideGoBack();
-  pageKey === pageKeys.summary && navigationBarView.showConfirmBtn();
-  pageKey !== pageKeys.summary && navigationBarView.showNextStepBtn();
-  pageKey === pageKeys.thankYou && navigationBarView.hideBar();
+  pageKey !== pageKeys.PERSONAL_INFO && navigationBarView.showGoBack();
+  pageKey === pageKeys.PERSONAL_INFO && navigationBarView.hideGoBack();
+  pageKey === pageKeys.SUMMARY && navigationBarView.showConfirmBtn();
+  pageKey !== pageKeys.SUMMARY && navigationBarView.showNextStepBtn();
+  pageKey === pageKeys.THANK_YOU && navigationBarView.hideBar();
+};
+
+const addHandlers = function (pageKey) {
+  switch (pageKey) {
+    case pageKeys.SUMMARY:
+      summaryView.addHandlerJumpToPage(jumpToPreviousPage);
+      break;
+    case pageKeys.SELECT_PLAN:
+      selectPlanView.addHandlerSelectRecurrence();
+      break;
+    default:
+      break;
+  }
 };
 
 const goBack = async function () {
   // find current page
   const currentPagePosition = model.getData("currentPage")?.position;
-  console.log("currentPagePosition", currentPagePosition);
   // get previous page
   const allPagesKeys = Object.values(pageKeys);
   const previousPageKey = allPagesKeys[currentPagePosition - 1];
@@ -84,7 +97,7 @@ const goBack = async function () {
   // get data of previous page
   const previousPageFormData = model.getPageData(previousPageKey);
   // render UI with data
-  if (previousPageKey === pageKeys.summary) {
+  if (previousPageKey === pageKeys.SUMMARY) {
     summaryView.render({
       // ...previousPageData,
       ...previousPageFormData,
@@ -95,6 +108,8 @@ const goBack = async function () {
       ...previousPageFormData,
     });
   }
+  // add handlers
+  addHandlers(previousPageKey);
   // manage navigationBar
   manageNavigationBar(previousPageKey);
   // activateStep side bar
@@ -129,7 +144,7 @@ const init = function () {
 
   // current page
   const currentPageKey =
-    model.getData("currentPage")?.key || pageKeys.personalInfo;
+    model.getData("currentPage")?.key || pageKeys.PERSONAL_INFO;
   // update state with current page
   if (!model.getData("currentPage")?.key) {
     model.updateState("currentPage", { key: currentPageKey, position: 0 });

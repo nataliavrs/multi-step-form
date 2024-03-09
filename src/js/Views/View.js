@@ -5,6 +5,28 @@ export default class View {
     this._parentElement.insertAdjacentHTML("afterbegin", markup);
   }
 
+  // TODO wip
+  update() {
+    const newMarkup = this._parentElement.outerHTML();
+    // turn current markup into DOM
+    const newDOM = document.createRange().createContextualFragment(newMarkup);
+    // turn new elements into array
+    const newElements = Array.from(newDOM.querySelectorAll("*"));
+    // turn current elements into array
+    const curElements = Array.from(this._parentElement.querySelectorAll("*"));
+    // compare new elements text with current elements text
+    newElements.forEach((newEl, i) => {
+      const curEl = curElements[i];
+      if (
+        !newEl.isEqualNode(curEl) &&
+        newEl.firstChild?.nodeValue.trim() !== ""
+      ) {
+        // update the text content where needed
+        curEl.textContent = newEl.textContent;
+      }
+    });
+  }
+
   getFormData() {
     const form = document.getElementById("form");
     if (!form) return;
