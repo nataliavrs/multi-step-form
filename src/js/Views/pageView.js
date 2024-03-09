@@ -15,11 +15,13 @@ class PageView extends View {
         </div>
         <form id="form">
           <label for="name">Name</label>
-          <input type="text" name="name" value="${data.name || ""}" autofocus />
+          <input type="text" name="name" value="${
+            data?.name || ""
+          }" autofocus />
           <label for="email">Email</label>
-          <input type="text" name="email" value="${data.email || ""}" />
+          <input type="text" name="email" value="${data?.email || ""}" />
           <label for="phone">Phone</label>
-          <input type="text" name="phone" value="${data.phone || ""}" />
+          <input type="text" name="phone" value="${data?.phone || ""}" />
         </form>`;
     },
     SELECT_PLAN: (data) => {
