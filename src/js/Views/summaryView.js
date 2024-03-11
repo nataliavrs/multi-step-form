@@ -1,13 +1,17 @@
 import View from "./View";
 
 class SummaryView extends View {
-  _parentElement = document.querySelector(".page__container");
   _data;
+
+  get navigationBarVisibilityRules() {
+    return {
+      showConfirmBtn: true,
+    };
+  }
 
   validatedForm() {
     // this.#parentElement get form etc
     console.log("validate personal info");
-
     return "formdata";
   }
 
@@ -19,9 +23,11 @@ class SummaryView extends View {
   }
 
   getPrice(service) {
-    if (!service) return;
+    if (!service) return 0;
+
     const SERVICE_PRICE_MAP = {
       arcade: 91,
+      advanced: 100,
       pro: 200,
       onlineService: 200,
       largerStorage: 10,
@@ -62,9 +68,8 @@ class SummaryView extends View {
     return 666;
   }
 
-  render(data) {
-    console.log("summaryview", data);
-    const markup = `
+  generateMarkup(data) {
+    return `
     <div class="page__title">
       <h1>Finishing up</h1>
       <p>Double-check everything looks right before confirming.</p>
@@ -87,7 +92,9 @@ class SummaryView extends View {
         }€</span>
         <button class="change-button" type="button">Change</button>
       </div>
-      ${this.generateAddOns(data?.addOns)}
+      <br>
+        ${this.generateAddOns(data?.addOns)}
+      </br>
       <div class="total">
         <span>Total  (per ${
           data?.recurrence
@@ -102,8 +109,6 @@ class SummaryView extends View {
       </div>
     </div>
   `;
-    this.clear();
-    this._parentElement.insertAdjacentHTML("afterbegin", markup);
   }
 
   addHandlerJumpToPage(handler) {

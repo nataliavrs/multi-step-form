@@ -1,6 +1,5 @@
 import addOnsView from "./Views/addOnsView";
 import navigationBarView from "./Views/navigationBarView";
-import pageView from "./Views/pageView";
 import personalInfoView from "./Views/personalInfoView";
 import selectPlanView from "./Views/selectPlanView";
 import sideBarView from "./Views/sideBarView";
@@ -11,24 +10,22 @@ import model from "./model";
 
 const goNext = async function () {
   try {
-    const currentPosition =
-      VIEWS_INSTANCE_MAP[model.getData("currentPage")?.key];
+    // get current position
     const currentPageKey = model.getData("currentPage")?.key;
-
+    const currentPositionInstance = VIEWS_INSTANCE_MAP[currentPageKey];
     // validate form
-    const isFormValid = "mock" || currentPosition.isFormValid;
-    // if invalid
+    const isFormValid = "mock" || currentPositionInstance.isFormValid;
+    // if form invalid
     if (!isFormValid) {
       // show validation errors
       return;
     }
-
-    // if valid
+    // if form valid
     // save data state
-    const currentFormData = currentPosition.getFormData();
+    const currentFormData = currentPositionInstance.getFormData();
     model.updatePage(currentPageKey, currentFormData);
     // loading spinner
-    currentPosition.renderSpinner();
+    currentPositionInstance.renderSpinner();
     // get next step
     const allPagesKeys = Object.values(pageKeys);
     const currentIndex = model.getData("currentPage").position;
@@ -37,14 +34,10 @@ const goNext = async function () {
     const nextPageData = await model.fetchPageData(nextPageKey);
     const nextPageStoredData = model.getPageData(nextPageKey);
     // render new page with data
-    if (nextPageKey === pageKeys.SUMMARY) {
-      summaryView.render({
-        ...nextPageData,
-        ...nextPageStoredData,
-      });
-    } else {
-      pageView.render(nextPageKey, { ...nextPageData, ...nextPageStoredData });
-    }
+    VIEWS_INSTANCE_MAP[nextPageKey].render({
+      ...nextPageData,
+      ...nextPageStoredData,
+    });
     // add handlers
     addHandlers(nextPageKey);
     // manage navigationBar
@@ -64,11 +57,20 @@ const goNext = async function () {
 };
 
 const manageNavigationBar = function (pageKey) {
-  pageKey !== pageKeys.PERSONAL_INFO && navigationBarView.showGoBack();
-  pageKey === pageKeys.PERSONAL_INFO && navigationBarView.hideGoBack();
-  pageKey === pageKeys.SUMMARY && navigationBarView.showConfirmBtn();
-  pageKey !== pageKeys.SUMMARY && navigationBarView.showNextStepBtn();
-  pageKey === pageKeys.THANK_YOU && navigationBarView.hideBar();
+  const rules = VIEWS_INSTANCE_MAP[pageKey].navigationBarVisibilityRules;
+
+  if (rules?.hideNavigationBarView) {
+    navigationBarView.hideBar();
+    return;
+  }
+
+  rules?.hideGoBack
+    ? navigationBarView.hideGoBack()
+    : navigationBarView.showGoBack();
+
+  rules?.showConfirmBtn
+    ? navigationBarView.showConfirmBtn()
+    : navigationBarView.showNextStepBtn();
 };
 
 const addHandlers = function (pageKey) {
@@ -85,29 +87,22 @@ const addHandlers = function (pageKey) {
 };
 
 const goBack = async function () {
-  // find current page
-  const currentPagePosition = model.getData("currentPage")?.position;
   // get previous page
   const allPagesKeys = Object.values(pageKeys);
+  const currentPagePosition = model.getData("currentPage")?.position;
   const previousPageKey = allPagesKeys[currentPagePosition - 1];
+  const previousPositionInstance =
+    VIEWS_INSTANCE_MAP[allPagesKeys[currentPagePosition - 1]];
   // loading spinner
-  VIEWS_INSTANCE_MAP[previousPageKey].renderSpinner();
-  // // fetch next page data
+  previousPositionInstance.renderSpinner();
+  // fetch next page data
   // const previousPageData = await model.fetchPageData(previousPageKey);
   // get data of previous page
   const previousPageFormData = model.getPageData(previousPageKey);
   // render UI with data
-  if (previousPageKey === pageKeys.SUMMARY) {
-    summaryView.render({
-      // ...previousPageData,
-      ...previousPageFormData,
-    });
-  } else {
-    pageView.render(previousPageKey, {
-      // ...previousPageData,
-      ...previousPageFormData,
-    });
-  }
+  previousPositionInstance.render({
+    ...previousPageFormData,
+  });
   // add handlers
   addHandlers(previousPageKey);
   // manage navigationBar
@@ -117,7 +112,6 @@ const goBack = async function () {
   // update current position state
   const previousIndex = model.getData("currentPage").position - 1;
   model.updateCurrentPosition(previousPageKey, previousIndex);
-  console.log("back position", model.getData("currentPage").position);
 };
 
 const jumpToPreviousPage = async function (pageKey) {
@@ -126,7 +120,7 @@ const jumpToPreviousPage = async function (pageKey) {
   // get data of previous page
   const previousPageFormData = model.getPageData(pageKey);
   // render UI with data
-  pageView.render(pageKey, {
+  VIEWS_INSTANCE_MAP[pageKey].render({
     ...previousPageData,
     ...previousPageFormData,
   });
@@ -152,7 +146,7 @@ const init = function () {
 
   // render current page
   const pageData = model.getPageData(currentPageKey);
-  pageView.render(currentPageKey, pageData);
+  VIEWS_INSTANCE_MAP[currentPageKey].render(pageData);
 
   // render side bar
   sideBarView.render();

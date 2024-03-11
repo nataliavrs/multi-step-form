@@ -3,7 +3,7 @@ import View from "./View";
 class NavigationBarView extends View {
   _parentElement = document.querySelector(".navigation__bar");
 
-  generateMarkup(page, data) {
+  generateMarkup() {
     return `
       <button class="btn--back">Back</button>
       <button type="submit" class="btn--next">Next step</button>
@@ -13,15 +13,14 @@ class NavigationBarView extends View {
   addHandlerNavigateBack(handler) {
     this._parentElement
       .querySelector(".btn--back")
-      .addEventListener("click", async function (e) {
+      .addEventListener("click", async function () {
         await handler();
       });
   }
 
   addHandlerNavigateNext(handler) {
     const btnNxt = document.querySelector(".btn--next");
-    btnNxt.addEventListener("click", async function (e) {
-      e.preventDefault();
+    btnNxt.addEventListener("click", async function () {
       await handler();
     });
   }

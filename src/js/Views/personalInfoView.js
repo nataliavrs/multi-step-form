@@ -1,9 +1,30 @@
 import View from "./View";
 
 class PersonalInfoView extends View {
-  _parentElement = document.querySelector(".page__container");
   _formData;
   _isFormValid;
+
+  get navigationBarVisibilityRules() {
+    return {
+      hideGoBack: true,
+    };
+  }
+
+  generateMarkup(data) {
+    return `
+    <div class="page__title">
+      <h1>Personal info</h1>
+      <p>Please provide your name, email address and phone number</p>
+    </div>
+    <form id="form">
+      <label for="name">Name</label>
+      <input type="text" name="name" value="${data?.name || ""}" />
+      <label for="email">Email</label>
+      <input type="text" name="email" value="${data?.email || ""}" />
+      <label for="phone">Phone</label>
+      <input type="text" name="phone" value="${data?.phone || ""}" />
+    </form>`;
+  }
 
   get isFormValid() {
     this._validateForm();

@@ -39,10 +39,10 @@ class Model {
 
   getPageData(page) {
     const pages = this.#state.pages;
-    if (page === pageKeys.summary) {
+    if (page === pageKeys.SUMMARY) {
       return {
-        ...pages[pageKeys.selectPlan],
-        addOns: pages[pageKeys.addOns],
+        ...pages[pageKeys.SELECT_PLAN],
+        addOns: pages[pageKeys.ADD_ONS],
       };
     }
     return pages[page];

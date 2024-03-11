@@ -114,6 +114,10 @@ body {
   border-top-color: hsl(243, 100%, 62%);
 }
 
+.add-on-container {
+  margin: 0.7rem 0;
+}
+
 @keyframes skLinRotate {
   95%,
   100% {
