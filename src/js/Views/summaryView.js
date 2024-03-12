@@ -69,6 +69,7 @@ class SummaryView extends View {
   }
 
   generateMarkup(data) {
+    this._data = data;
     return `
     <div class="page__title">
       <h1>Finishing up</h1>
@@ -87,8 +88,8 @@ class SummaryView extends View {
           : "Yearly"
         : "---"
     })</span>
-        <span>${
-          data?.subscription ? this.getPrice(data?.subscription) : "---"
+        <span> 'TO-DO PRENDERE DA SELECT PLAN'${
+          data?.subscription ? data?.subscription : "---"
         }€</span>
         <button class="change-button" type="button">Change</button>
       </div>
