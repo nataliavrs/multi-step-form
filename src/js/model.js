@@ -11,6 +11,9 @@ class Model {
       SELECT_PLAN: {
         plan: "",
         recurrence: "",
+        advancedPrice: "",
+        arcadePrice: "",
+        proPrice: "",
       },
       ADD_ONS: {
         onlineService: false,

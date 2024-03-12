@@ -1,7 +1,7 @@
 import View from "./View";
 
 class NavigationBarView extends View {
-  _parentElement = document.querySelector(".navigation__bar");
+  parentElement = document.querySelector(".navigation__bar");
 
   generateMarkup() {
     return `
@@ -11,7 +11,7 @@ class NavigationBarView extends View {
   }
 
   addHandlerNavigateBack(handler) {
-    this._parentElement
+    this.parentElement
       .querySelector(".btn--back")
       .addEventListener("click", async function () {
         await handler();
@@ -26,27 +26,27 @@ class NavigationBarView extends View {
   }
 
   hideBar() {
-    this._parentElement.classList.add("hide");
+    this.parentElement.classList.add("hide");
   }
 
   showBar() {
-    this._parentElement.classList.remove("hide");
+    this.parentElement.classList.remove("hide");
   }
 
   showConfirmBtn() {
-    this._parentElement.querySelector(".btn--next").textContent = "Confirm";
+    this.parentElement.querySelector(".btn--next").textContent = "Confirm";
   }
 
   showNextStepBtn() {
-    this._parentElement.querySelector(".btn--next").textContent = "Next step";
+    this.parentElement.querySelector(".btn--next").textContent = "Next step";
   }
 
   hideGoBack() {
-    this._parentElement.querySelector(".btn--back").classList.add("hide");
+    this.parentElement.querySelector(".btn--back").classList.add("hide");
   }
 
   showGoBack() {
-    this._parentElement.querySelector(".btn--back").classList.remove("hide");
+    this.parentElement.querySelector(".btn--back").classList.remove("hide");
   }
 }
 

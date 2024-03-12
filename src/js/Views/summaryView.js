@@ -112,7 +112,7 @@ class SummaryView extends View {
   }
 
   addHandlerJumpToPage(handler) {
-    const change = this._parentElement.querySelector(".change-button");
+    const change = this.parentElement.querySelector(".change-button");
     change.addEventListener("click", function (e) {
       console.log("jump to page");
       handler();

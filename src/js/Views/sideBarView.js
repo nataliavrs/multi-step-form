@@ -2,7 +2,7 @@ import { pageKeys } from "../config";
 import View from "./View";
 
 class SideBarView extends View {
-  _parentElement = document.querySelector(".side__bar");
+  parentElement = document.querySelector(".side__bar");
   _currentStep;
 
   generateMarkup() {
@@ -19,7 +19,7 @@ class SideBarView extends View {
         .querySelector(".position-circle")
         .classList.remove("active");
 
-    const stepsNodes = this._parentElement.querySelectorAll(".side__bar--step");
+    const stepsNodes = this.parentElement.querySelectorAll(".side__bar--step");
     const currentStep = Array.from(stepsNodes).find((step) => {
       return step.dataset.key === currentPageKey;
     });

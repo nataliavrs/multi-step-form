@@ -38,7 +38,7 @@ const goNext = async function () {
       ...nextPageData,
       ...nextPageStoredData,
     });
-    // add handlers
+    // add event handlers
     addHandlers(nextPageKey);
     // manage navigationBar
     manageNavigationBar(nextPageKey);
@@ -79,7 +79,7 @@ const addHandlers = function (pageKey) {
       summaryView.addHandlerJumpToPage(jumpToPreviousPage);
       break;
     case pageKeys.SELECT_PLAN:
-      selectPlanView.addHandlerSelectRecurrence();
+      selectPlanView.addHandlerSelectRecurrence(model.getPageData(pageKey));
       break;
     default:
       break;
@@ -103,7 +103,7 @@ const goBack = async function () {
   previousPositionInstance.render({
     ...previousPageFormData,
   });
-  // add handlers
+  // add event handlers
   addHandlers(previousPageKey);
   // manage navigationBar
   manageNavigationBar(previousPageKey);

@@ -1,21 +1,20 @@
 export default class View {
-  _parentElement = document.querySelector(".page__container");
+  parentElement = document.querySelector(".page__container");
 
   render(data) {
     const markup = this.generateMarkup(data);
     this.clear();
-    this._parentElement.insertAdjacentHTML("afterbegin", markup);
+    this.parentElement.insertAdjacentHTML("afterbegin", markup);
   }
 
-  // TODO wip
-  update() {
-    const newMarkup = _parentElement.outerHTML();
+  update(newData) {
+    const newMarkup = this.generateMarkup(newData);
     // turn current markup into DOM
     const newDOM = document.createRange().createContextualFragment(newMarkup);
     // turn new elements into array
     const newElements = Array.from(newDOM.querySelectorAll("*"));
     // turn current elements into array
-    const curElements = Array.from(_parentElement.querySelectorAll("*"));
+    const curElements = Array.from(this.parentElement.querySelectorAll("*"));
     // compare new elements text with current elements text
     newElements.forEach((newEl, i) => {
       const curEl = curElements[i];
@@ -55,11 +54,11 @@ export default class View {
       <span class="loader"></span>
     `;
 
-    this._parentElement.innerHTML = "";
-    this._parentElement.insertAdjacentHTML("beforeEnd", markup);
+    this.parentElement.innerHTML = "";
+    this.parentElement.insertAdjacentHTML("beforeEnd", markup);
   }
 
   clear() {
-    this._parentElement.innerHTML = "";
+    this.parentElement.innerHTML = "";
   }
 }
