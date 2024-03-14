@@ -137,8 +137,7 @@ const init = function () {
   storedPages && model.updateStateWithStoredData(storedPages);
 
   // current page
-  const currentPageKey =
-    model.getData("currentPage")?.key || pageKeys.PERSONAL_INFO;
+  const currentPageKey = model.getPageData()?.key || pageKeys.PERSONAL_INFO;
   // update state with current page
   if (!model.getData("currentPage")?.key) {
     model.updateState("currentPage", { key: currentPageKey, position: 0 });

@@ -19,6 +19,9 @@ class Model {
         onlineService: false,
         largerStorage: false,
         customizableProfile: false,
+        onlineServicePrice: "",
+        largerStoragePrice: "",
+        customizableProfilePrice: "",
       },
       SUMMARY: {},
     },
@@ -51,28 +54,6 @@ class Model {
     return pages[page];
   }
 
-  async fetchPageData(page) {
-    try {
-      await new Promise((resolve) => {
-        setTimeout(resolve, 500);
-      });
-
-      switch (page) {
-        // case pageKeys.personalInfo:
-        //   const url = "baseUrl/personal";
-        //   const response = await fetch("www.test");
-        //   if (!response.ok) throw new Error("Error fetching data");
-        //   const data = await response.json();
-        //   return data;
-        default:
-          return null;
-      }
-    } catch (error) {
-      console.error("An error occurred:", error);
-      return null;
-    }
-  }
-
   getData(key) {
     return this.#state[key];
   }
@@ -98,6 +79,28 @@ class Model {
     this.#state = {
       pages: { ...JSON.parse(pages) },
     };
+  }
+
+  async fetchPageData(page) {
+    try {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 500);
+      });
+
+      switch (page) {
+        // case pageKeys.personalInfo:
+        //   const url = "baseUrl/personal";
+        //   const response = await fetch("www.test");
+        //   if (!response.ok) throw new Error("Error fetching data");
+        //   const data = await response.json();
+        //   return data;
+        default:
+          return null;
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+      return null;
+    }
   }
 }
 
