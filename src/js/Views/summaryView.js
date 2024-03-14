@@ -22,8 +22,26 @@ class SummaryView extends View {
     });
   }
 
+  generateAddOns(addOns) {
+    const activeAddOns = Object.entries(addOns)
+      .map(([addOn, selected]) => (selected ? addOn : null))
+      .filter((selectedAddOn) => selectedAddOn)
+      .map(
+        (addOn) => `
+        <div class="summary--add-on--container">
+          <span>${this.getAddOnLabel(addOn) || ""}</span>
+          <span>${this.getPrice(addOn) || ""}€</span>
+        </div>
+        `
+      )
+      .join("");
+    return activeAddOns;
+  }
+
   getPrice(service) {
     if (!service) return 0;
+
+    largerStoragePrice;
 
     const SERVICE_PRICE_MAP = {
       arcade: 91,
@@ -46,29 +64,13 @@ class SummaryView extends View {
     return ADD_LABEL_MAP[addOn];
   }
 
-  generateAddOns(addOns) {
-    const activeAddOns = Object.entries(addOns)
-      .map(([addOn, selected]) => (selected ? addOn : null))
-      .filter((selectedAddOn) => selectedAddOn)
-      .map(
-        (addOn) => `
-        <div class="summary--add-on--container">
-          <span>${this.getAddOnLabel(addOn) || ""}</span>
-          <span>${this.getPrice(addOn) || ""}€</span>
-        </div>
-        `
-      )
-      .join("");
-
-    return activeAddOns;
-  }
-
   // TODO
   getTotal() {
     return 666;
   }
 
   generateMarkup(data) {
+    console.log("generate markup summary data 📦", data);
     this._data = data;
     return `
     <div class="page__title">
