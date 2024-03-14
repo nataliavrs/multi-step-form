@@ -11,17 +11,17 @@ class Model {
       SELECT_PLAN: {
         plan: "",
         recurrence: "",
-        advancedPrice: "",
-        arcadePrice: "",
-        proPrice: "",
+        advancedPrice: 0,
+        arcadePrice: 0,
+        proPrice: 0,
       },
       ADD_ONS: {
         onlineService: false,
         largerStorage: false,
         customizableProfile: false,
-        onlineServicePrice: "",
-        largerStoragePrice: "",
-        customizableProfilePrice: "",
+        onlineServicePrice: 0,
+        largerStoragePrice: 0,
+        customizableProfilePrice: 0,
       },
       SUMMARY: {},
     },
@@ -70,7 +70,31 @@ class Model {
   }
 
   updatePage(page, data) {
-    // console.log("update page", page, data);
+    if (page === pageKeys.SUMMARY) {
+      const selectPlanData = this.#state.pages.SELECT_PLAN;
+      this.#state.pages.SUMMARY = {
+        plan: {
+          plan: selectPlanData.plan,
+          recurrence: selectPlanData.recurrence,
+          price: advancedPrice ?? arcadePrice ?? proPrice,
+        },
+        addOns: [
+          {
+            advancedPrice: false,
+            price: 0,
+          },
+          {
+            arcadePrice: false,
+            price: 0,
+          },
+          {
+            proPrice: false,
+            price: 0,
+          },
+        ],
+      };
+    }
+
     this.#state.pages[page] = data;
     this.#storeState();
   }

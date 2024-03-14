@@ -33,9 +33,18 @@ const goNext = async function () {
     // fetch next page data
     const nextPageData = await model.fetchPageData(nextPageKey);
     const nextPageStoredData = model.getPageData(nextPageKey);
+    // get all data to show in summary
+    const summaryData =
+      nextPageKey === pageKeys.SUMMARY
+        ? {
+            ...model.getPageData(pageKeys.SELECT_PLAN),
+            ...model.getPageData(pageKeys.ADD_ONS),
+          }
+        : null;
     // render new page with data
     VIEWS_INSTANCE_MAP[nextPageKey].render({
       ...nextPageData,
+      // ...summaryData,
       ...nextPageStoredData,
     });
     // add event handlers
