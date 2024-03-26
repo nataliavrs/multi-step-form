@@ -70,61 +70,65 @@ class Model {
   }
 
   updatePage(page, data) {
-    if (page === pageKeys.SUMMARY) {
-      const selectPlanData = this.#state.pages.SELECT_PLAN;
-      this.#state.pages.SUMMARY = {
-        plan: {
-          plan: selectPlanData.plan,
-          recurrence: selectPlanData.recurrence,
-          price: advancedPrice ?? arcadePrice ?? proPrice,
+    const STATE_MAP = {
+      SELECT_PLAN: {
+        subscription: data.subscription,
+        price: Object.entries(data)
+          .filter(
+            ([key, _]) =>
+              key.includes(data.subscription) && key.includes("Price")
+          )
+          .map(([_, value]) => value)[0],
+        recurrence: data.recurrence,
+      },
+      ADD_ONS: {
+        onlineService: {
+          selected: data.onlineService,
+          price: data.onlineServicePrice,
         },
-        addOns: [
-          {
-            advancedPrice: false,
-            price: 0,
-          },
-          {
-            arcadePrice: false,
-            price: 0,
-          },
-          {
-            proPrice: false,
-            price: 0,
-          },
-        ],
-      };
-    }
+        largerStorage: {
+          selected: data.largerStorage,
+          price: data.largerStoragePrice,
+        },
+        customizableService: {
+          selected: data.customizableService,
+          price: data.customizableServiceService,
+        },
+      },
+      // SUMMARY: {
+      //   plan: {
+      //     plan: selectPlanData.plan,
+      //     recurrence: selectPlanData.recurrence,
+      //     price: advancedPrice ?? arcadePrice ?? proPrice,
+      //   },
+      //   addOns: [
+      //     {
+      //       advancedPrice: false,
+      //       price: 0,
+      //     },
+      //     {
+      //       arcadePrice: false,
+      //       price: 0,
+      //     },
+      //     {
+      //       proPrice: false,
+      //       price: 0,
+      //     },
+      //   ],
+      // },
+      DEFAULT: (this.#state.pages[page] = data),
+    };
 
-    this.#state.pages[page] = data;
+    console.log("page data", data);
+    this.#state.pages[page] = STATE_MAP[page] || STATE_MAP["DEFAULT"];
     this.#storeState();
+    console.log("update page data", this.#state.pages[page]);
   }
 
   updateStateWithStoredData(pages) {
     this.#state = {
       pages: { ...JSON.parse(pages) },
     };
-  }
-
-  async fetchPageData(page) {
-    try {
-      await new Promise((resolve) => {
-        setTimeout(resolve, 500);
-      });
-
-      switch (page) {
-        // case pageKeys.personalInfo:
-        //   const url = "baseUrl/personal";
-        //   const response = await fetch("www.test");
-        //   if (!response.ok) throw new Error("Error fetching data");
-        //   const data = await response.json();
-        //   return data;
-        default:
-          return null;
-      }
-    } catch (error) {
-      console.error("An error occurred:", error);
-      return null;
-    }
   }
 }
 

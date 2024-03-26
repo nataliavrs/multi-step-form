@@ -16,7 +16,7 @@ class AddOnsView extends View {
         <label for="onlineService">Online service</label>
         <p>Access to multiplayer games</p>
         <input type="checkbox" ${
-          data?.onlineService ? "checked" : ""
+          data?.onlineService?.selected ? "checked" : ""
         } id="onlineService" name="onlineService" class="addon-checkbox" value="onlineService" />
         <label class="price">${this.getPrice("onlineService")}€/mo</label>
         <input name="onlineServicePrice" type="text" value="${this.getPrice(
@@ -28,7 +28,7 @@ class AddOnsView extends View {
         <label for="largerStorage">Larger storage</label>
         <p>Extra 1TB of cloud save</p>
         <input type="checkbox" ${
-          data?.largerStorage ? "checked" : ""
+          data?.largerStorage?.selected ? "checked" : ""
         } id="largerStorage" name="largerStorage" class="addon-checkbox" value="largerStorage" />
         <label class="price">${this.getPrice("largerStorage")}€/mo</label>
         <input name="largerStoragePrice" type="text" value="${this.getPrice(
@@ -40,7 +40,7 @@ class AddOnsView extends View {
         <label for="customizableService">Customizable profile</label>
         <p>Custom theme on your profile</p>
         <input type="checkbox" ${
-          data?.customizableService ? "checked" : ""
+          data?.customizableService?.selected ? "checked" : ""
         } id="customizableService" name="customizableService" class="addon-checkbox" value="customizableService" />
         <label class="price">${this.getPrice("customizableService")}€/mo</label>
         <input name="customizableServiceService" type="text" value="${this.getPrice(

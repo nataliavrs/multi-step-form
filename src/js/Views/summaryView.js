@@ -24,7 +24,7 @@ class SummaryView extends View {
 
   generateAddOns(addOns) {
     const activeAddOns = Object.entries(addOns)
-      .map(([addOn, selected]) => (selected ? addOn : null))
+      .map(([addOn, selected]) => (selected.selected ? addOn : null))
       .filter((selectedAddOn) => selectedAddOn)
       .map(
         (addOn) => `
@@ -41,16 +41,13 @@ class SummaryView extends View {
   getPrice(service) {
     if (!service) return 0;
 
-    largerStoragePrice;
-
     const SERVICE_PRICE_MAP = {
-      arcade: 91,
-      advanced: 100,
-      pro: 200,
-      onlineService: 200,
-      largerStorage: 10,
-      customizableService: 10,
+      [this._data.subscription]: this._data.price,
+      onlineService: this._data?.addOns?.onlineService?.price,
+      largerStorage: this._data?.addOns?.largerStorage?.price,
+      customizableService: this._data?.addOns?.customizableService?.price,
     };
+
     return SERVICE_PRICE_MAP[service];
   }
 
@@ -66,7 +63,20 @@ class SummaryView extends View {
 
   // TODO
   getTotal() {
-    return 666;
+    console.log("calculate total", this._data);
+
+    const activeAddOnsPrice = Object.entries(Object.entries(this._data?.addOns))
+      .map(([selected, price]) => {
+        console.log(selected, price);
+        return selected.selected ? addOn : null;
+      })
+      .filter((selectedAddOn) => selectedAddOn)
+      .map((addOn) => {
+        console.log(addOn);
+        return addOn.price;
+      })
+      .reduce((acc, curr) => +acc + +curr);
+    console.log(activeAddOnsPrice);
   }
 
   generateMarkup(data) {
@@ -90,9 +100,7 @@ class SummaryView extends View {
           : "Yearly"
         : "---"
     })</span>
-        <span> 'TO-DO PRENDERE DA SELECT PLAN'${
-          data?.subscription ? data?.subscription : "---"
-        }€</span>
+        <span>${data?.subscription ? data?.price : "---"}€</span>
         <button class="change-button" type="button">Change</button>
       </div>
       <br>

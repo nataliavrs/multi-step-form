@@ -31,7 +31,6 @@ const goNext = async function () {
     const currentIndex = model.getData("currentPage").position;
     const nextPageKey = allPagesKeys[currentIndex + 1];
     // fetch next page data
-    const nextPageData = await model.fetchPageData(nextPageKey);
     const nextPageStoredData = model.getPageData(nextPageKey);
     // get all data to show in summary
     const summaryData =
@@ -43,7 +42,6 @@ const goNext = async function () {
         : null;
     // render new page with data
     VIEWS_INSTANCE_MAP[nextPageKey].render({
-      ...nextPageData,
       // ...summaryData,
       ...nextPageStoredData,
     });
