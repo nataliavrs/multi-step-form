@@ -1,12 +1,30 @@
-// import iconAdvanced from "url:../../assets/images/icon-advanced.svg";
-
 import View from "./View";
 
 class SelectPlanView extends View {
   _data;
 
+  normalizeData(data, updatedRecurrence) {
+    const normalizedData = {
+      ...data,
+      arcadePrice: this.getPrice(
+        "arcade",
+        updatedRecurrence || data?.recurrence
+      ),
+      proPrice: this.getPrice("pro", updatedRecurrence || data?.recurrence),
+      advancedPrice: this.getPrice(
+        "advanced",
+        updatedRecurrence || data?.recurrence
+      ),
+      price: this.getPrice(
+        data?.subscription,
+        updatedRecurrence || data?.recurrence
+      ),
+    };
+    return normalizedData;
+  }
+
   generateMarkup(data) {
-    this._data = data;
+    this._data = this.normalizeData(data);
 
     return `
     <div class="page__title">
@@ -19,10 +37,10 @@ class SelectPlanView extends View {
           data?.subscription === "arcade" ? "checked" : ""
         } id="arcade" class="arcade-btn" value="arcade">
         <label for="arcade">Arcade</label>
-        <label class="price">${this.getPrice("arcade")}€/mo</label>
-        <input name="arcadePrice" type="text" value="${this.getPrice(
-          "arcade"
-        )}" hidden>
+        <label class="price">${this._data?.arcadePrice}€/mo</label>
+        <input name="arcadePrice" type="text"  value="${
+          this._data?.arcadePrice
+        }" hidden>
         <label class="recurrence-gift">${this.getGift("arcade")}</label>
       </div>
 
@@ -31,10 +49,10 @@ class SelectPlanView extends View {
             data?.subscription === "advanced" ? "checked" : ""
           } id="advanced" class="advanced-btn" value="advanced">
           <label for="advanced">Advanced</label>
-          <label class="price">${this.getPrice("advanced")}€/mo</label>
-          <input name="advancedPrice" type="text" value="${this.getPrice(
-            "advanced"
-          )}" hidden>
+          <label class="price">${this._data?.advancedPrice}€/mo</label>
+          <input name="advancedPrice" type="text" value="${
+            this._data?.advancedPrice
+          }" hidden>
           <label class="recurrence-gift">${this.getGift("advanced")}</label>
       </div>
 
@@ -43,10 +61,10 @@ class SelectPlanView extends View {
             data?.subscription === "pro" ? "checked" : ""
           } id="pro" class="pro-btn" value="pro">
           <label for="pro">Pro</label>
-          <label class="price">${this.getPrice("pro")}€/mo</label>
-          <input name="proPrice" type="text" value="${this.getPrice(
-            "pro"
-          )}" hidden>
+          <label class="price">${this._data?.proPrice}€/mo</label>
+          <input name="proPrice" type="text" value="${
+            this._data?.proPrice
+          }" hidden>
           <label class="recurrence-gift">${this.getGift("pro")}</label>
       </div>
 
@@ -64,10 +82,10 @@ class SelectPlanView extends View {
   `;
   }
 
-  getPrice(service) {
-    if (!service && !this._data.recurrence) return 0;
+  getPrice(subscription, recurrence) {
+    if (!subscription && !recurrence) return 0;
 
-    const SERVICE_PRICE_MAP = {
+    const SUBSCRIPTION_PRICE_MAP = {
       monthly: {
         arcade: 10,
         advanced: 20,
@@ -80,11 +98,11 @@ class SelectPlanView extends View {
       },
     };
 
-    return SERVICE_PRICE_MAP[this._data.recurrence][service];
+    return SUBSCRIPTION_PRICE_MAP[recurrence][subscription];
   }
 
-  getGift(service) {
-    if (!service && !this._data.recurrence) return "";
+  getGift(subscription) {
+    if (!subscription && !this._data?.recurrence) return "";
 
     const GIFT_PRICE_MAP = {
       monthly: {
@@ -98,7 +116,7 @@ class SelectPlanView extends View {
         pro: 2,
       },
     };
-    const gift = GIFT_PRICE_MAP[this._data.recurrence][service];
+    const gift = GIFT_PRICE_MAP[this._data.recurrence][subscription];
     return gift > 0 ? `${gift} months for free` : "";
   }
 
@@ -108,7 +126,10 @@ class SelectPlanView extends View {
       .addEventListener("input", (event) => {
         const target = event.target;
         if (target.name !== "recurrence") return;
-        this.update({ ...this._data, recurrence: target.value });
+        this.update({
+          ...this.normalizeData(this._data, target.value),
+          recurrence: target.value,
+        });
       });
   }
 }

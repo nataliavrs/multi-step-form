@@ -24,7 +24,6 @@ class ThankYouView extends View {
 
   validateForm() {
     // this.#parentElement get form etc
-    console.log("thank you view");
     this._isFormValid = "thank you view";
     this._formData = "";
     // return "";

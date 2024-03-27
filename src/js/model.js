@@ -61,7 +61,6 @@ class Model {
   updateState(key, data) {
     this.#state = { ...this.#state, [key]: data };
     this.#storeState();
-    // console.log(this.#state);
   }
 
   updateCurrentPosition(key, position) {
@@ -70,59 +69,39 @@ class Model {
   }
 
   updatePage(page, data) {
+    console.log("updated page form data:", page, data);
     const STATE_MAP = {
       SELECT_PLAN: {
-        subscription: data.subscription,
-        price: Object.entries(data)
+        subscription: data?.subscription,
+        price: Object.entries(data || {})
           .filter(
             ([key, _]) =>
-              key.includes(data.subscription) && key.includes("Price")
+              key.includes(data?.subscription) &&
+              key.toLocaleLowerCase().includes("price")
           )
           .map(([_, value]) => value)[0],
-        recurrence: data.recurrence,
+        recurrence: data?.recurrence,
       },
       ADD_ONS: {
         onlineService: {
-          selected: data.onlineService,
-          price: data.onlineServicePrice,
+          selected: data?.onlineService,
+          price: data?.onlineServicePrice,
         },
         largerStorage: {
-          selected: data.largerStorage,
-          price: data.largerStoragePrice,
+          selected: data?.largerStorage,
+          price: data?.largerStoragePrice,
         },
         customizableService: {
-          selected: data.customizableService,
-          price: data.customizableServiceService,
+          selected: data?.customizableService,
+          price: data?.customizableServiceService,
         },
       },
-      // SUMMARY: {
-      //   plan: {
-      //     plan: selectPlanData.plan,
-      //     recurrence: selectPlanData.recurrence,
-      //     price: advancedPrice ?? arcadePrice ?? proPrice,
-      //   },
-      //   addOns: [
-      //     {
-      //       advancedPrice: false,
-      //       price: 0,
-      //     },
-      //     {
-      //       arcadePrice: false,
-      //       price: 0,
-      //     },
-      //     {
-      //       proPrice: false,
-      //       price: 0,
-      //     },
-      //   ],
-      // },
       DEFAULT: (this.#state.pages[page] = data),
     };
 
-    console.log("page data", data);
     this.#state.pages[page] = STATE_MAP[page] || STATE_MAP["DEFAULT"];
+    console.log("saved data in state", STATE_MAP[page]);
     this.#storeState();
-    console.log("update page data", this.#state.pages[page]);
   }
 
   updateStateWithStoredData(pages) {

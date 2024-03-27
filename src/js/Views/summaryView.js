@@ -11,15 +11,7 @@ class SummaryView extends View {
 
   validatedForm() {
     // this.#parentElement get form etc
-    console.log("validate personal info");
     return "formdata";
-  }
-
-  addHandlerJumpToPage(handler) {
-    // parent.get change text
-    window.addEventListener("click", async function (e) {
-      await handler();
-    });
   }
 
   generateAddOns(addOns) {
@@ -29,8 +21,8 @@ class SummaryView extends View {
       .map(
         (addOn) => `
         <div class="summary--add-on--container">
-          <span>${this.getAddOnLabel(addOn) || ""}</span>
-          <span>${this.getPrice(addOn) || ""}€</span>
+          <span>${this.getAddOnLabel(addOn) || ""}:</span>
+          <span class="price">${this.getPrice(addOn) || ""}€</span>
         </div>
         `
       )
@@ -42,12 +34,10 @@ class SummaryView extends View {
     if (!service) return 0;
 
     const SERVICE_PRICE_MAP = {
-      [this._data.subscription]: this._data.price,
       onlineService: this._data?.addOns?.onlineService?.price,
       largerStorage: this._data?.addOns?.largerStorage?.price,
       customizableService: this._data?.addOns?.customizableService?.price,
     };
-
     return SERVICE_PRICE_MAP[service];
   }
 
@@ -61,26 +51,20 @@ class SummaryView extends View {
     return ADD_LABEL_MAP[addOn];
   }
 
-  // TODO
   getTotal() {
-    console.log("calculate total", this._data);
-
-    const activeAddOnsPrice = Object.entries(Object.entries(this._data?.addOns))
-      .map(([selected, price]) => {
-        console.log(selected, price);
-        return selected.selected ? addOn : null;
-      })
-      .filter((selectedAddOn) => selectedAddOn)
-      .map((addOn) => {
-        console.log(addOn);
-        return addOn.price;
-      })
-      .reduce((acc, curr) => +acc + +curr);
-    console.log(activeAddOnsPrice);
+    const addOnsPrices = Object.values(this._data.addOns).reduce(
+      (acc, { selected, price }) => {
+        return selected ? acc + +price : acc;
+      },
+      0
+    );
+    const total = `Total: ${addOnsPrices + +this._data.price}€ / ${
+      this._data.recurrence === "monthly" ? "mo" : "yr"
+    }`;
+    return total;
   }
 
   generateMarkup(data) {
-    console.log("generate markup summary data 📦", data);
     this._data = data;
     return `
     <div class="page__title">
@@ -95,31 +79,20 @@ class SummaryView extends View {
             : ""
         } (${
       data?.recurrence
-        ? data?.recurrence === "monthly"
-          ? "Monthly"
-          : "Yearly"
+        ? data?.recurrence[0].toUpperCase() + data?.recurrence.slice(1)
         : "---"
-    })</span>
-        <span>${data?.subscription ? data?.price : "---"}€</span>
+    }):</span>
+        <span class="price">${data?.price}€</span>
         <button class="change-button" type="button">Change</button>
       </div>
       <br>
         ${this.generateAddOns(data?.addOns)}
       </br>
-      <div class="total">
-        <span>Total  (per ${
-          data?.recurrence
-            ? data?.recurrence === "monthly"
-              ? "month"
-              : "year"
-            : "---"
-        })</span>
-        <span>${this.getTotal()}€/${
-      data?.recurrence === "monthly" ? "mo" : "yr"
-    }</span>
+      <div class="total-container">
+        <span class="total">${this.getTotal()}</span>
       </div>
     </div>
-  `;
+    `;
   }
 
   addHandlerJumpToPage(handler) {

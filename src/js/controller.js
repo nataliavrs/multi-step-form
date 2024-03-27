@@ -42,7 +42,7 @@ const goNext = async function () {
         : null;
     // render new page with data
     VIEWS_INSTANCE_MAP[nextPageKey].render({
-      // ...summaryData,
+      ...summaryData,
       ...nextPageStoredData,
     });
     // add event handlers
@@ -122,13 +122,10 @@ const goBack = async function () {
 };
 
 const jumpToPreviousPage = async function (pageKey) {
-  // fetch page data
-  const previousPageData = await model.fetchPageData(pageKey);
   // get data of previous page
   const previousPageFormData = model.getPageData(pageKey);
   // render UI with data
   VIEWS_INSTANCE_MAP[pageKey].render({
-    ...previousPageData,
     ...previousPageFormData,
   });
   // manage navigationBar
