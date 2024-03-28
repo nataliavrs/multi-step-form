@@ -1,3 +1,4 @@
+import { pageKeys } from "../config";
 import View from "./View";
 
 class SummaryView extends View {
@@ -99,8 +100,7 @@ class SummaryView extends View {
   addHandlerJumpToPage(handler) {
     const change = this.parentElement.querySelector(".change-button");
     change.addEventListener("click", function (e) {
-      console.log("jump to page");
-      handler("SELECT_PLAN");
+      handler(pageKeys.SELECT_PLAN);
     });
   }
 }
