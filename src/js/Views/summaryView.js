@@ -58,8 +58,8 @@ class SummaryView extends View {
       },
       0
     );
-    const total = `Total: ${addOnsPrices + +this._data.price}€ / ${
-      this._data.recurrence === "monthly" ? "mo" : "yr"
+    const total = `Total: ${addOnsPrices + +(this._data.price || 0)}€ / ${
+      this._data.recurrence === "yearly" ? "yr" : "mo"
     }`;
     return total;
   }
@@ -82,7 +82,8 @@ class SummaryView extends View {
         ? data?.recurrence[0].toUpperCase() + data?.recurrence.slice(1)
         : "---"
     }):</span>
-        <span class="price">${data?.price}€</span>
+    <span>${data?.subscription === "yearly" ? "2 months for free" : ""}</span>
+        <span class="price">${data?.price ?? "---"}€</span>
         <button class="change-button" type="button">Change</button>
       </div>
       <br>

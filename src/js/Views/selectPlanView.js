@@ -98,7 +98,7 @@ class SelectPlanView extends View {
       },
     };
 
-    return SUBSCRIPTION_PRICE_MAP[recurrence][subscription];
+    return SUBSCRIPTION_PRICE_MAP[recurrence || "monthly"][subscription];
   }
 
   getGift(subscription) {
@@ -116,7 +116,8 @@ class SelectPlanView extends View {
         pro: 2,
       },
     };
-    const gift = GIFT_PRICE_MAP[this._data.recurrence][subscription];
+    const gift =
+      GIFT_PRICE_MAP[this._data.recurrence || "monthly"][subscription];
     return gift > 0 ? `${gift} months for free` : "";
   }
 
@@ -126,7 +127,7 @@ class SelectPlanView extends View {
       .addEventListener("input", (event) => {
         const target = event.target;
         if (target.name !== "recurrence") return;
-        this.update({
+        this.updateHTML({
           ...this.normalizeData(this._data, target.value),
           recurrence: target.value,
         });

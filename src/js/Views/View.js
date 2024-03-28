@@ -7,23 +7,28 @@ export default class View {
     this.parentElement.insertAdjacentHTML("afterbegin", markup);
   }
 
-  update(newData) {
+  updateHTML(newData) {
     const newMarkup = this.generateMarkup(newData);
-    // turn current markup into DOM
+    // Turn current markup into DOM
     const newDOM = document.createRange().createContextualFragment(newMarkup);
-    // turn new elements into array
+    // Turn new elements into array
     const newElements = Array.from(newDOM.querySelectorAll("*"));
-    // turn current elements into array
+    // Turn current elements into array
     const curElements = Array.from(this.parentElement.querySelectorAll("*"));
-    // compare new elements text with current elements text
+    // Compare new elements with current elements
     newElements.forEach((newEl, i) => {
       const curEl = curElements[i];
       if (
         !newEl.isEqualNode(curEl) &&
         newEl.firstChild?.nodeValue.trim() !== ""
       ) {
-        // update the text content where needed
+        // Update the text content
         curEl.textContent = newEl.textContent;
+      }
+
+      if (newEl.value !== curEl.value && curEl.name && newEl.name) {
+        // Update input value
+        curEl.value = newEl.value;
       }
     });
   }
