@@ -1,7 +1,7 @@
 import { pageKeys } from "./config";
 
 class Model {
-  #state = {
+  state = {
     pages: {
       PERSONAL_INFO: {
         name: "",
@@ -31,20 +31,8 @@ class Model {
     },
   };
 
-  #storeState() {
-    if (!localStorage.getItem("pages")) {
-      localStorage.setItem("pages", JSON.stringify(this.#state.pages));
-    } else {
-      const previousPages = JSON.parse(localStorage.getItem("pages"));
-      localStorage.setItem(
-        "pages",
-        JSON.stringify({ ...previousPages, ...this.#state.pages })
-      );
-    }
-  }
-
   getPageData(page) {
-    const pages = this.#state.pages;
+    const pages = this.state.pages;
     if (page === pageKeys.SUMMARY) {
       return {
         ...pages[pageKeys.SELECT_PLAN],
@@ -55,21 +43,20 @@ class Model {
   }
 
   getData(key) {
-    return this.#state[key];
+    return this.state[key];
   }
 
   updateState(key, data) {
-    this.#state = { ...this.#state, [key]: data };
-    this.#storeState();
+    this.state = { ...this.state, [key]: data };
+    this.storeState();
   }
 
   updateCurrentPosition(key, position) {
-    this.#state.currentPage.position = position;
-    this.#state.currentPage.key = key;
+    this.state.currentPage.position = position;
+    this.state.currentPage.key = key;
   }
 
   updatePage(page, data) {
-    console.log("updated page form data:", page, data);
     const STATE_MAP = {
       SELECT_PLAN: {
         subscription: data?.subscription,
@@ -96,16 +83,27 @@ class Model {
           price: data?.customizableServiceService,
         },
       },
-      DEFAULT: (this.#state.pages[page] = data),
+      DEFAULT: (this.state.pages[page] = data),
     };
 
-    this.#state.pages[page] = STATE_MAP[page] || STATE_MAP["DEFAULT"];
-    console.log("saved data in state", STATE_MAP[page]);
-    this.#storeState();
+    this.state.pages[page] = STATE_MAP[page] || STATE_MAP["DEFAULT"];
+    this.storeState();
+  }
+
+  storeState() {
+    if (!localStorage.getItem("pages")) {
+      localStorage.setItem("pages", JSON.stringify(this.state.pages));
+    } else {
+      const previousPages = JSON.parse(localStorage.getItem("pages"));
+      localStorage.setItem(
+        "pages",
+        JSON.stringify({ ...previousPages, ...this.state.pages })
+      );
+    }
   }
 
   updateStateWithStoredData(pages) {
-    this.#state = {
+    this.state = {
       pages: { ...JSON.parse(pages) },
     };
   }

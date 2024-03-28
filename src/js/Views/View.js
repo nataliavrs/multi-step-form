@@ -50,7 +50,6 @@ export default class View {
       },
       {}
     );
-    console.log("formdata", formData);
     return formData;
   }
 

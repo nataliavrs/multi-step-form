@@ -13,15 +13,15 @@ class NavigationBarView extends View {
   addHandlerNavigateBack(handler) {
     this.parentElement
       .querySelector(".btn--back")
-      .addEventListener("click", async function () {
-        await handler();
+      .addEventListener("click", function () {
+        handler();
       });
   }
 
   addHandlerNavigateNext(handler) {
     const btnNxt = document.querySelector(".btn--next");
-    btnNxt.addEventListener("click", async function () {
-      await handler();
+    btnNxt.addEventListener("click", function () {
+      handler();
     });
   }
 

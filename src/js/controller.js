@@ -8,7 +8,7 @@ import thankYouView from "./Views/thankYouView";
 import { pageKeys } from "./config";
 import model from "./model";
 
-const goNext = async function () {
+const goNext = function () {
   try {
     // get current position
     const currentPageKey = model.getData("currentPage")?.key;
@@ -93,7 +93,7 @@ const addHandlers = function (pageKey) {
   }
 };
 
-const goBack = async function () {
+const goBack = function () {
   // get previous page
   const allPagesKeys = Object.values(pageKeys);
   const currentPagePosition = model.getData("currentPage")?.position;
@@ -102,8 +102,6 @@ const goBack = async function () {
     VIEWS_INSTANCE_MAP[allPagesKeys[currentPagePosition - 1]];
   // loading spinner
   previousPositionInstance.renderSpinner();
-  // fetch next page data
-  // const previousPageData = await model.fetchPageData(previousPageKey);
   // get data of previous page
   const previousPageFormData = model.getPageData(previousPageKey);
   // render UI with data
@@ -121,7 +119,7 @@ const goBack = async function () {
   model.updateCurrentPosition(previousPageKey, previousIndex);
 };
 
-const jumpToPreviousPage = async function (pageKey) {
+const jumpToPreviousPage = function (pageKey) {
   // get data of previous page
   const previousPageFormData = model.getPageData(pageKey);
   // render UI with data
