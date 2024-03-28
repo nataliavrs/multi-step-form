@@ -100,7 +100,7 @@ class SummaryView extends View {
     const change = this.parentElement.querySelector(".change-button");
     change.addEventListener("click", function (e) {
       console.log("jump to page");
-      handler();
+      handler("SELECT_PLAN");
     });
   }
 }

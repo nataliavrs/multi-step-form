@@ -18,7 +18,7 @@ class AddOnsView extends View {
         <input type="checkbox" ${
           data?.onlineService?.selected ? "checked" : ""
         } id="onlineService" name="onlineService" class="addon-checkbox" value="onlineService" />
-        <label class="price">${this.getPrice("onlineService")}€/mo</label>
+        <span class="price">${this.getPrice("onlineService")}€/mo</span>
         <input name="onlineServicePrice" type="text" value="${this.getPrice(
           "onlineService"
         )}" hidden>
@@ -30,7 +30,7 @@ class AddOnsView extends View {
         <input type="checkbox" ${
           data?.largerStorage?.selected ? "checked" : ""
         } id="largerStorage" name="largerStorage" class="addon-checkbox" value="largerStorage" />
-        <label class="price">${this.getPrice("largerStorage")}€/mo</label>
+        <span class="price">${this.getPrice("largerStorage")}€/mo</span>
         <input name="largerStoragePrice" type="text" value="${this.getPrice(
           "largerStorage"
         )}" hidden>
@@ -42,7 +42,7 @@ class AddOnsView extends View {
         <input type="checkbox" ${
           data?.customizableService?.selected ? "checked" : ""
         } id="customizableService" name="customizableService" class="addon-checkbox" value="customizableService" />
-        <label class="price">${this.getPrice("customizableService")}€/mo</label>
+        <span class="price">${this.getPrice("customizableService")}€/mo</span>
         <input name="customizableServiceService" type="text" value="${this.getPrice(
           "customizableService"
         )}" hidden>

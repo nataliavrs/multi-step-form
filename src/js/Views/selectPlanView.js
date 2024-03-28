@@ -33,48 +33,48 @@ class SelectPlanView extends View {
     </div>
     <form id="form">
       <div class="input__container">            
-        <input type="radio" name="subscription" ${
+        <input type="radio" id="arcadeSubscription" name="subscription" ${
           data?.subscription === "arcade" ? "checked" : ""
-        } id="arcade" class="arcade-btn" value="arcade">
-        <label for="arcade">Arcade</label>
-        <label class="price">${this._data?.arcadePrice}€/mo</label>
+        } class="arcade-btn" value="arcade">
+        <label for="arcadeSubscription">Arcade</label>
+        <span class="price">${this._data?.arcadePrice}€/mo</span>
         <input name="arcadePrice" type="text"  value="${
           this._data?.arcadePrice
         }" hidden>
-        <label class="recurrence-gift">${this.getGift("arcade")}</label>
+        <span class="recurrence-gift">${this.getGift("arcade")}</span>
       </div>
 
       <div class="input__container">            
-          <input type="radio" name="subscription" ${
+          <input type="radio" id="advancedSubscription" name="subscription" ${
             data?.subscription === "advanced" ? "checked" : ""
-          } id="advanced" class="advanced-btn" value="advanced">
-          <label for="advanced">Advanced</label>
-          <label class="price">${this._data?.advancedPrice}€/mo</label>
+          }  class="advanced-btn" value="advanced">
+          <label for="advancedSubscription">Advanced</label>
+          <span class="price">${this._data?.advancedPrice}€/mo</span>
           <input name="advancedPrice" type="text" value="${
             this._data?.advancedPrice
           }" hidden>
-          <label class="recurrence-gift">${this.getGift("advanced")}</label>
+          <span class="recurrence-gift">${this.getGift("advanced")}</span>
       </div>
 
       <div class="input__container">
-          <input type="radio" name="subscription" ${
+          <input type="radio" id="proSubscription" name="subscription" ${
             data?.subscription === "pro" ? "checked" : ""
-          } id="pro" class="pro-btn" value="pro">
-          <label for="pro">Pro</label>
-          <label class="price">${this._data?.proPrice}€/mo</label>
+          } class="pro-btn" value="pro">
+          <label for="proSubscription">Pro</label>
+          <span class="price">${this._data?.proPrice}€/mo</span>
           <input name="proPrice" type="text" value="${
             this._data?.proPrice
           }" hidden>
-          <label class="recurrence-gift">${this.getGift("pro")}</label>
+          <span class="recurrence-gift">${this.getGift("pro")}</span>
       </div>
 
       <div class="radios__container">
-        <label for="monthly">Monthly</label>
-        <input type="radio" name="recurrence" ${
+        <label for="monthlyRecurrence">Monthly</label>
+        <input type="radio" id="monthlyRecurrence" name="monthlyRecurrence" ${
           data?.recurrence === "monthly" ? "checked" : ""
         } value="monthly">
-        <label for="yearly">Yearly</label>
-        <input type="radio" name="recurrence" ${
+        <label for="yearlyRecurrence">Yearly</label>
+        <input type="radio" id="yearlyRecurrence" name="yearlyRecurrence" ${
           data?.recurrence === "yearly" ? "checked" : ""
         } value="yearly">
       </div>

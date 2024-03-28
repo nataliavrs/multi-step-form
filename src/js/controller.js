@@ -130,6 +130,11 @@ const jumpToPreviousPage = function (pageKey) {
   manageNavigationBar(pageKey);
   // activateStep side bar
   sideBarView.activateStep(pageKey);
+  // update current position state
+  const newPositionIndex = Object.values(pageKeys).findIndex(
+    (page) => page === pageKey
+  );
+  model.updateCurrentPosition(pageKey, newPositionIndex);
 };
 
 const init = function () {

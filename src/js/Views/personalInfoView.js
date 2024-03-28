@@ -18,11 +18,11 @@ class PersonalInfoView extends View {
     </div>
     <form id="form">
       <label for="name">Name</label>
-      <input type="text" name="name" value="${data?.name || ""}" />
+      <input type="text" id="name" name="name" value="${data?.name || ""}" />
       <label for="email">Email</label>
-      <input type="text" name="email" value="${data?.email || ""}" />
+      <input type="text" id="email" name="email" value="${data?.email || ""}" />
       <label for="phone">Phone</label>
-      <input type="text" name="phone" value="${data?.phone || ""}" />
+      <input type="text" id="phone" name="phone" value="${data?.phone || ""}" />
     </form>`;
   }
 
