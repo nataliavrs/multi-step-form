@@ -166,6 +166,23 @@ const init = function () {
   // add event listeners
   navigationBarView.addHandlerNavigateNext(goNext);
   navigationBarView.addHandlerNavigateBack(goBack);
+
+  // listen to keyboard enter press
+  document.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      goNext();
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowLeft") {
+      goBack();
+    }
+
+    if (e.key === "ArrowRight") {
+      goNext();
+    }
+  });
 };
 
 const VIEWS_INSTANCE_MAP = {
